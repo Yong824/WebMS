@@ -3,106 +3,47 @@
 */
 
 /* Font ----------------------------------------------------------------------- */
-
 body, input, select, textarea, button {
     font: 16px Roboto, sans-serif;
 }
 
 /* Layout --------------------------------------------------------------------- */
-
 body {
     margin: 0;
-    height: 100vh;
-    display: grid;
-    grid: auto auto 1fr auto / auto;
-}
-
-header, 
-footer {
-    background: #ccc;
-    padding: 10px 50px;
-}
-
-header {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-header h1 {
-    flex: 1;
-    margin: 0;
-    padding-left: 40px;
-    background: url(/images/favicon.png) no-repeat left / 32px;
-}
-
-header a {
-    color: inherit;
-    text-decoration: none;
-}
-
-header img {
-    width: 36px;
-    height: 36px;
-    border: 1px solid #999;
-    border-radius: 5px;
-}
-
-nav {
-    background: #999;
-    padding: 0 50px;
-    display: flex;
-}
-
-nav a {
-    background: #666;
-    color: #fff;
-    text-decoration: none;
-    padding: 5px 10px;
-    white-space: nowrap;
-}
-
-nav a:hover {
-    background: #333;
-}
-
-nav b {
-    padding: 5px 10px;
-    white-space: nowrap;
-}
-
-nav div {
-    flex: 1;
+    background-color: #1A365D !important;
+    background-image: linear-gradient(135deg, #1A365D, #0A1526) !important;
+    color: #ffffff !important;
+    min-height: 100vh !important;
+    background-attachment: fixed !important;
 }
 
 main {
-    padding: 20px 50px;
+    padding: 0 50px 20px 50px;
 }
 
-main h1 {
-    margin-top: 0;
-}
+    main h1 {
+        margin-top: 0;
+    }
 
 /* Table ---------------------------------------------------------------------- */
-
 .table {
     border-collapse: collapse;
+    width: 100%;
 }
 
-.table th, 
-.table td {
-    border: 1px solid #333;
-    padding: 5px;
-}
+    .table th, .table td {
+        border: 1px solid #333;
+        padding: 5px;
+    }
 
-.table th {
-    background: #666;
-    color: #fff;
-}
+    .table th {
+        background: #666;
+        color: #fff;
+    }
 
-.table tr:hover td {
-    background: #ccc;
-}
+    .table tr:hover td {
+        background: #ccc;
+    }
 
 .detail th {
     text-align: left;
@@ -113,13 +54,13 @@ main h1 {
     display: block;
 }
 
-.table th a.asc::after {
-    content: ' ▴';
-}
+    .table th a.asc::after {
+        content: ' \25B4';
+    }
 
-.table th a.des::after {
-    content: ' ▾';
-}
+    .table th a.des::after {
+        content: ' \25BE';
+    }
 
 .table tr:has(input:checked) td {
     background: #999;
@@ -151,31 +92,25 @@ main h1 {
 }
 
 /* Pager ---------------------------------------------------------------------- */
-
-.pagination a,
-.pagination span {
+.pagination a, .pagination span {
     background: #666 !important;
     color: #fff !important;
     border: 1px solid #000 !important;
 }
 
-.pagination a:hover,
-.pagination span:hover {
+    .pagination a:hover, .pagination span:hover {
+        background: #333 !important;
+    }
+
+.pagination .active a, .pagination .active span {
     background: #333 !important;
 }
 
-.pagination .active a,
-.pagination .active span {
-    background: #333 !important;
-}
-
-.pagination .disabled a,
-.pagination .disabled span {
+.pagination .disabled a, .pagination .disabled span {
     background: #ccc !important;
 }
 
 /* Flash Message -------------------------------------------------------------- */
-
 .info {
     position: fixed;
     background: #666;
@@ -190,19 +125,33 @@ main h1 {
     opacity: 0;
 }
 
-.info:not(:empty) {
-    animation: fade 5s;
-}
+    .info:not(:empty) {
+        animation: fade 5s;
+    }
 
 @keyframes fade {
-      0% { top: -100px; opacity: 0; }
-     10% { top:  100px; opacity: 1; }
-     90% { top:  100px; opacity: 1; }
-    100% { top: -100px; opacity: 0; }
+    0% {
+        top: -100px;
+        opacity: 0;
+    }
+
+    10% {
+        top: 100px;
+        opacity: 1;
+    }
+
+    90% {
+        top: 100px;
+        opacity: 1;
+    }
+
+    100% {
+        top: -100px;
+        opacity: 0;
+    }
 }
 
 /* Form ----------------------------------------------------------------------- */
-
 label > * {
     vertical-align: text-top;
 }
@@ -215,31 +164,29 @@ label > * {
     place-items: center start;
 }
 
-.form > label:not(:has(*)) {
-    background: #ccc;
-    font-weight: bold;
-    padding: 5px;
-    place-self: stretch;
-}
+    .form > label:not(:has(*)) {
+        background: #ccc;
+        font-weight: bold;
+        padding: 5px;
+        place-self: stretch;
+    }
 
-.form > section,
-.validation-summary-valid,
-.validation-summary-errors {
-    grid-column: 1 / -1;
-}
+    .form > section,
+    .validation-summary-valid,
+    .validation-summary-errors {
+        grid-column: 1 / -1;
+    }
 
-.validation-summary-valid ul,
-.validation-summary-errors ul {
-    margin: 0;
-}
+        .validation-summary-valid ul,
+        .validation-summary-errors ul {
+            margin: 0;
+        }
 
-.field-validation-error,
-.validation-summary-errors {
+.field-validation-error, .validation-summary-errors {
     color: red;
 }
 
 /* Photo Upload --------------------------------------------------------------- */
-
 .upload img {
     display: block;
     border: 1px solid #333;
@@ -250,7 +197,6 @@ label > * {
 }
 
 /* Badge ---------------------------------------------------------------------- */
-
 .badge {
     display: inline-block;
     background-color: #666;
@@ -260,3 +206,205 @@ label > * {
     min-width: 30px;
     text-align: center;
 }
+
+.bello-header-footer {
+    background: linear-gradient(to right, #0A1526, #030610) !important;
+    border-bottom: 0px solid transparent !important;
+    box-shadow: none !important;
+}
+
+.bello-footer {
+    background: linear-gradient(to right, #0A1526, #030610) !important;
+    border-top: none !important;
+}
+
+.btn-buy-now {
+    background: linear-gradient(135deg, #D4AF37, #FFDF73, #D4AF37) !important;
+    color: #000000 !important;
+    font-weight: 800 !important;
+    padding: 10px 28px;
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+    .btn-buy-now:hover {
+        background: linear-gradient(135deg, #FFDF73, #FFF5B8, #FFDF73) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+.btn-watch-trailer {
+    display: inline-flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.8) !important;
+    color: #ffffff !important;
+    padding: 8px 24px;
+    border-radius: 50px;
+    border: 2px solid #D4AF37;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+}
+
+    .btn-watch-trailer i {
+        color: #D4AF37;
+        font-size: 1.4rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-watch-trailer:hover {
+        background: linear-gradient(135deg, #D4AF37, #FFDF73) !important;
+        color: #000000 !important;
+        border-color: transparent;
+        transform: translateY(-2px);
+    }
+
+        .btn-watch-trailer:hover i {
+            color: #000000;
+        }
+
+.nav-link-custom {
+    background: linear-gradient(135deg, #B8860B, #FFDF73, #D4AF37) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    font-weight: 700 !important;
+    position: relative;
+    padding-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+    .nav-link-custom i {
+        background: linear-gradient(135deg, #B8860B, #FFDF73, #D4AF37) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        margin-right: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link-custom::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        background-color: #ffffff;
+        transition: all 0.3s ease-in-out;
+        transform: translateX(-50%);
+    }
+
+    .nav-link-custom:hover, .nav-link-custom:hover i {
+        background: #ffffff !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+
+        .nav-link-custom:hover::after {
+            width: 100%;
+        }
+
+.section-title {
+    background: linear-gradient(135deg, #B8860B, #FFDF73, #D4AF37) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    font-weight: 800 !important;
+    letter-spacing: 2px !important;
+    text-transform: uppercase;
+}
+
+.view-all-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+    .view-all-link:hover {
+        color: #FFDF73;
+    }
+
+.movie-card {
+    background-color: #0d1b2a;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    transition: all 0.3s ease;
+}
+
+    .movie-card:hover {
+        transform: translateY(-10px);
+        border-color: rgba(212, 175, 55, 0.5);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    }
+
+.movie-poster-wrapper {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 2/3;
+}
+
+    .movie-poster-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+.movie-card:hover .movie-poster-wrapper img {
+    transform: scale(1.1);
+}
+
+.movie-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.movie-card:hover .movie-overlay {
+    opacity: 1;
+}
+
+.fnb-card {
+    background-color: #0d1b2a;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.1);
+    transition: all 0.3s ease;
+}
+
+    .fnb-card:hover {
+        border-color: rgba(212, 175, 55, 0.5);
+        background-color: #112240;
+    }
+
+.fnb-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.fnb-add-btn {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+    .fnb-add-btn:hover {
+        background-color: #D4AF37;
+        color: #000000;
+    }

@@ -1,15 +1,187 @@
 ﻿@{
-    ViewBag.Title = "Home | Index";
+    ViewBag.Title = "Home Page";
+    Layout = "_Layout";
 }
 
-@section head {
+@section Hero {
+    <div id="movieCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-pause="hover">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#movieCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+            <button type="button" data-bs-target="#movieCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#movieCarousel" data-bs-slide-to="2"></button>
+            <button type="button" data-bs-target="#movieCarousel" data-bs-slide-to="3"></button>
+            <button type="button" data-bs-target="#movieCarousel" data-bs-slide-to="4"></button>
+            <button type="button" data-bs-target="#movieCarousel" data-bs-slide-to="5"></button>
+        </div>
 
+        <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="4000">
+                <img src="/images/1.png" class="d-block w-100" style="object-fit: cover; height: 600px;" alt="Banner 1">
+                <div class="carousel-caption d-flex justify-content-center align-items-center pb-5">
+                    <a href="#" class="btn btn-buy-now px-4 py-2 me-4">BUY NOW</a>
+                    <a href="#" class="btn-watch-trailer text-decoration-none">
+                        <i class="fa-regular fa-circle-play me-2"></i>WATCH TRAILER
+                    </a>
+                </div>
+            </div>
+
+            <div class="carousel-item" data-bs-interval="4000">
+                <img src="/images/2.png" class="d-block w-100" style="object-fit: cover; height: 600px;" alt="Banner 2">
+                <div class="carousel-caption d-flex justify-content-center align-items-center pb-5">
+                    <a href="#" class="btn btn-buy-now px-4 py-2 me-4">BUY NOW</a>
+                    <a href="#" class="btn-watch-trailer text-decoration-none">
+                        <i class="fa-regular fa-circle-play me-2"></i>WATCH TRAILER
+                    </a>
+                </div>
+            </div>
+
+            <div class="carousel-item" data-bs-interval="4000">
+                <img src="/images/3.png" class="d-block w-100" style="object-fit: cover; height: 600px;" alt="Banner 3">
+                <div class="carousel-caption d-flex justify-content-center align-items-center pb-5">
+                    <a href="#" class="btn btn-buy-now px-4 py-2 me-4">BUY NOW</a>
+                    <a href="#" class="btn-watch-trailer text-decoration-none">
+                        <i class="fa-regular fa-circle-play me-2"></i>WATCH TRAILER
+                    </a>
+                </div>
+            </div>
+
+            <div class="carousel-item" data-bs-interval="4000">
+                <img src="/images/4.png" class="d-block w-100" style="object-fit: cover; height: 600px;" alt="Banner 4">
+                <div class="carousel-caption d-flex justify-content-center align-items-center pb-5">
+                    <a href="#" class="btn btn-buy-now px-4 py-2 me-4">BUY NOW</a>
+                    <a href="#" class="btn-watch-trailer text-decoration-none">
+                        <i class="fa-regular fa-circle-play me-2"></i>WATCH TRAILER
+                    </a>
+                </div>
+            </div>
+
+            <div class="carousel-item" data-bs-interval="4000">
+                <img src="/images/5.png" class="d-block w-100" style="object-fit: cover; height: 600px;" alt="Banner 5">
+                <div class="carousel-caption d-flex justify-content-center align-items-center pb-5">
+                    <a href="#" class="btn btn-buy-now px-4 py-2 me-4">BUY NOW</a>
+                    <a href="#" class="btn-watch-trailer text-decoration-none">
+                        <i class="fa-regular fa-circle-play me-2"></i>WATCH TRAILER
+                    </a>
+                </div>
+            </div>
+
+            <div class="carousel-item" data-bs-interval="4000">
+                <img src="/images/6.png" class="d-block w-100" style="object-fit: cover; height: 600px;" alt="Banner 6">
+                <div class="carousel-caption d-flex justify-content-center align-items-center pb-5">
+                    <a href="#" class="btn btn-buy-now px-4 py-2 me-4">BUY NOW</a>
+                    <a href="#" class="btn-watch-trailer text-decoration-none">
+                        <i class="fa-regular fa-circle-play me-2"></i>WATCH TRAILER
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#movieCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#movieCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 }
+@* @body *@
+<div class="container mb-5 mt-1">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <h2 class="section-title fw-bold m-0">NOW SHOWING</h2>
+        <a href="#" class="view-all-link">View All <i class="fa-solid fa-chevron-right ms-1"></i></a>
+    </div>
 
-@* TODO: Page content *@
-<h1>Here is Customer Homepage</h1>
+    <div class="row g-4 mb-5">
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="movie-card">
+                <div class="movie-poster-wrapper">
+                    <img src="/images/poster1.jpg" class="img-fluid" alt="Train to Busan">
+                    <div class="movie-overlay">
+                        <a href="#" class="btn btn-buy-now btn-sm">GET TICKETS</a>
+                    </div>
+                </div>
+                <div class="movie-info p-3">
+                    <h5 class="text-white mb-1 text-truncate">Train to Busan</h5>
+                    <p class="text-white-50 mb-0 small"><i class="fa-solid fa-tag me-1"></i>Action, Thriller</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="movie-card">
+                <div class="movie-poster-wrapper">
+                    <img src="/images/poster2.jpg" class="img-fluid" alt="Spider-Man">
+                    <div class="movie-overlay">
+                        <a href="#" class="btn btn-buy-now btn-sm">GET TICKETS</a>
+                    </div>
+                </div>
+                <div class="movie-info p-3">
+                    <h5 class="text-white mb-1 text-truncate">Spider-Man</h5>
+                    <p class="text-white-50 mb-0 small"><i class="fa-solid fa-tag me-1"></i>Action, Sci-Fi</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="movie-card">
+                <div class="movie-poster-wrapper">
+                    <img src="/images/poster3.jpg" class="img-fluid" alt="Doctor Strange">
+                    <div class="movie-overlay">
+                        <a href="#" class="btn btn-buy-now btn-sm">GET TICKETS</a>
+                    </div>
+                </div>
+                <div class="movie-info p-3">
+                    <h5 class="text-white mb-1 text-truncate">Doctor Strange</h5>
+                    <p class="text-white-50 mb-0 small"><i class="fa-solid fa-tag me-1"></i>Fantasy, Action</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="movie-card">
+                <div class="movie-poster-wrapper">
+                    <img src="/images/poster4.jpg" class="img-fluid" alt="Avengers">
+                    <div class="movie-overlay">
+                        <a href="#" class="btn btn-buy-now btn-sm">GET TICKETS</a>
+                    </div>
+                </div>
+                <div class="movie-info p-3">
+                    <h5 class="text-white mb-1 text-truncate">Avengers</h5>
+                    <p class="text-white-50 mb-0 small"><i class="fa-solid fa-tag me-1"></i>Sci-Fi, Action</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <div class="d-flex justify-content-between align-items-end mb-4 mt-5">
+        <h2 class="section-title fw-bold m-0">PREMIUM DINING</h2>
+        <a href="#" class="view-all-link">Full Menu <i class="fa-solid fa-chevron-right ms-1"></i></a>
+    </div>
 
-@section foot {
-
-}
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="fnb-card d-flex align-items-center p-3">
+                <img src="/images/fnb1.jpg" class="fnb-img" alt="Popcorn Combo">
+                <div class="ms-4">
+                    <h4 class="text-white mb-2">Signature Popcorn Combo</h4>
+                    <p class="text-white-50 mb-3 small">Caramel & Cheese mixed popcorn with 2 large soft drinks.</p>
+                    <h5 class="text-warning mb-0">RM 25.00</h5>
+                </div>
+                <div class="ms-auto">
+                    <a href="#" class="btn btn-outline-warning rounded-circle fnb-add-btn"><i class="fa-solid fa-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="fnb-card d-flex align-items-center p-3">
+                <img src="/images/fnb2.jpg" class="fnb-img" alt="Nachos Set">
+                <div class="ms-4">
+                    <h4 class="text-white mb-2">Gourmet Nachos Set</h4>
+                    <p class="text-white-50 mb-3 small">Crispy nachos with premium melted cheese dip.</p>
+                    <h5 class="text-warning mb-0">RM 18.50</h5>
+                </div>
+                <div class="ms-auto">
+                    <a href="#" class="btn btn-outline-warning rounded-circle fnb-add-btn"><i class="fa-solid fa-plus"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
