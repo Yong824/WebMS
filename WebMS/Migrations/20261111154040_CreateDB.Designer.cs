@@ -12,8 +12,8 @@ using WebMS.Models.Entities;
 namespace WebMS.Migrations
 {
     [DbContext(typeof(DB))]
-    [Migration("20261110171030_UpdatePricingScheme")]
-    partial class UpdatePricingScheme
+    [Migration("20261111154040_CreateDB")]
+    partial class CreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

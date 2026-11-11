@@ -84,7 +84,7 @@ namespace WebMS.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LayoutId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<int>(type: "int", nullable: false),
-                    BasePrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    PriceModifier = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Color = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false)
                 },
@@ -243,7 +243,7 @@ namespace WebMS.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     CinemaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SeatLayoutId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SeatLayoutId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -258,6 +258,11 @@ namespace WebMS.Migrations
                         principalTable: "Cinemas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Halls_SeatLayouts_SeatLayoutId",
+                        column: x => x.SeatLayoutId,
+                        principalTable: "SeatLayouts",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Halls_Users_CreatedByUserId",
                         column: x => x.CreatedByUserId,
@@ -307,6 +312,7 @@ namespace WebMS.Migrations
                     ReleaseAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     TrailerPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BasePrice = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     MovieTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -410,6 +416,8 @@ namespace WebMS.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Showtime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ShowtimeTier = table.Column<int>(type: "int", nullable: false),
+                    TimeMultiplier = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Format = table.Column<int>(type: "int", nullable: false),
                     MovieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -578,7 +586,8 @@ namespace WebMS.Migrations
                 name: "IX_Halls_SeatLayoutId",
                 table: "Halls",
                 column: "SeatLayoutId",
-                unique: true);
+                unique: true,
+                filter: "[SeatLayoutId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Halls_UpdatedByUserId",
@@ -756,10 +765,10 @@ namespace WebMS.Migrations
                 name: "Movies");
 
             migrationBuilder.DropTable(
-                name: "SeatLayouts");
+                name: "Cinemas");
 
             migrationBuilder.DropTable(
-                name: "Cinemas");
+                name: "SeatLayouts");
 
             migrationBuilder.DropTable(
                 name: "MovieTypes");
