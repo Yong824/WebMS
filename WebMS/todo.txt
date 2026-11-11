@@ -15,7 +15,6 @@
 	Final Price = Movie Base Price * timing + Seat Section (Orchestra, Mezzanine, Balcony) + Schedule Format (2D,3D, IMAX, 4DX), Category surcharges 
   ** Please use function "CalculateTicketPrice" in PricingService.cs to ensure the consistent of the price output. 
 
-(test github push msg)
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ** AI usage note:
