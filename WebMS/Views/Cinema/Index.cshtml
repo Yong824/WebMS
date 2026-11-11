@@ -1,0 +1,53 @@
+﻿@model List<WebMS.Models.Entities.Places.Cinema>
+@{
+    ViewBag.Title = "Cinema List";
+}
+
+@section head {
+
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Manage Cinemas</h2>
+    <button type="button" data-modal-url="/Cinema/Create" data-modal-target="#cinemaModal" class="btn btn-primary" id="btnAddCinema">
+        + Add New Cinema
+    </button>
+</div>
+
+<table class="table table-striped" id="cinemaTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Email</th>
+            @* TODO: merchant, display "null" if don't have *@
+            @* TODO: created by , display "null" if don't have *@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cinema in Model)
+        {
+            <tr>
+                <td>@cinema.Name</td>
+                <td>@cinema.Address</td>
+                <td>@cinema.PhoneNumber</td>
+                <td>@cinema.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Bootstrap Modal Shell -->
+<div class="modal fade" id="cinemaModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="cinemaModalContent">
+            <!-- Form will be loaded here via AJAX -->
+        </div>
+    </div>
+</div>
+
+@section foot {
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/cinema-editor.js" asp-append-version="true"></script>
+}

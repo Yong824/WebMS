@@ -1,0 +1,28 @@
+﻿@model WebMS.Models.Entities.Movies.MovieType
+
+<form asp-action="CreateMovieType" asp-controller="Movie" method="post" data-ajax-form>
+    @Html.AntiForgeryToken()
+
+    <div class="modal-header">
+        <h5 class="modal-title">Add Movie Type</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="mb-3">
+            <label class="form-label">Type Name</label>
+            <input name="Name" class="form-control" required placeholder="e.g. Action, Comedy, Horror" />
+            <span class="text-danger small">@Html.ValidationMessage("Name")</span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description (Optional)</label>
+            <textarea name="description" class="form-control" rows="2" placeholder="Brief description..."></textarea>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Type</button>
+    </div>
+</form>

@@ -1,0 +1,89 @@
+* If changed on the Model/Entities files:
+	Update database via	Package Manager Console:
+		- Add-Migration DescriptionName
+		- Update-Database
+
+* Label future update part with "// TODO", so by CTRL+F searching "TODO" we can know which part haven't done.
+
+* Currently not to use my Admin, Cinema, Hall, Movie Views or Controller as the true reference, I generate them with AI for faster intialization, 
+	later will have a lot changing on those files, such as AJAX function ———— Yong Hou
+
+* you may open terminal (from Top Naviagtion: View > Terminal), use command "dotnet watch run --no-hot-reload", to run the project, 
+	it will auto reload once u update and save the files, and easier to find error message.
+
+* Pricing Format:
+	Final Price = Movie Base Price * timing + Seat Section (Orchestra, Mezzanine, Balcony) + Schedule Format (2D,3D, IMAX, 4DX), Category surcharges 
+  ** Please use function "CalculateTicketPrice" in PricingService.cs to ensure the consistent of the price output. 
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+** AI usage note:
+···································································································································································
+// When create controller, AI mostly will give
+public class MovieController : Controller
+{
+    private readonly DB _db;
+    private readonly IWebHostEnvironment _env;
+
+    public MovieController(DB db, IWebHostEnvironment env)
+    {
+        _db = db;
+        _env = env;
+    }
+	...
+}
+
+// But we need to use this latest format, short and efficient
+public class MovieController (DB db, IWebHostEnvironment env) : Controller
+{ ... }
+
+···································································································································································
+In Controller need to remove the "[HttpGet]" tag if AI give it, but "[HttpPost]" need to be kept
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+* Confirmed (Q&A):
+	1. Can our project don't have HomeController, instead we use CustomerController and app.MapControllerRoute route to it?
+		- No, keep the HomeController even if just one file in Views/Home folder
+
+	2. Can we let the admin part be accessed by using url, localhost/admin, are admin and customer must use the same login page?
+		- With the same login page, navigate user to admin if their account user role is admin.
+
+	3. Where to store the services (methods) file, using controller then inject it in each of the page use of it? Or all in the same controller 
+		(e.g. all admin page function stored in one AdminController.cs file? If so how about backend API like PaymentController)
+		- Can have service file, but if possible try to make use of controller instead of service.
+
+	4. Can I create sub-subfolder in the Views
+		- No, one subfolder one Controller, try to avoid sub-subfolder. Which means just one level in the Views.
+		- And thus, in each subfolder will have an Index.cshtml file. 
+
+	5. Can I create subfolder in Controller
+		- No, just put all at the same level in the folder of Controllers
+
+	6. Can I use Areas for the project
+		- No suggested, this project not so big, keep it as simple as possible
+
+* To ask:
+	1. Structure in for css and js, can it have subfolder?
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+* Before submission:
+	1. Search in project is there any comment with "TODO" or "to do", fix all of them
+	2. Add a readme file if needed. (optional)
+	
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+* Controllers Advice, may use structure like this:
+	Controllers/
+	  HomeController.cs          ← Customer landing page, login, register
+	  MoviesController.cs        ← Customer: browse movies
+	  BookingController.cs       ← Customer: seat selection, checkout
+  
+	  AdminController.cs         ← Admin: dashboard (has Index() action)
+	  CinemaController.cs        ← Admin: CRUD cinemas
+	  HallController.cs          ← Admin: CRUD halls
+	  SeatLayoutController.cs    ← Admin: CRUD seat layouts
+	  ScheduleController.cs      ← Admin: CRUD showtimes
+	  MovieController.cs         ← Admin: CRUD movies (can reuse MoviesController too)
+	  
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+* Database structure: refer to DatabasePlainText.txt, may use it copy to AI for reference, but aware it may be inconsistent with real model files

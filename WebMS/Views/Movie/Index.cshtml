@@ -1,0 +1,66 @@
+﻿@model List<WebMS.Models.Entities.Movies.Movie>
+@{
+    ViewBag.Title = "Movies";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Movies</h2>
+    <div>
+        <a asp-action="MovieTypes" class="btn btn-outline-dark">Manage Types</a>
+        <a asp-action="Create" class="btn btn-primary">+ Add New Movie</a>
+    </div>
+</div>
+
+<table class="table table-striped table-hover align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th style="width: 80px;">Cover</th>
+            <th>Title</th>
+            <th>Director</th>
+            <th>Duration</th>
+            <th>Release</th>
+            <th>Rating</th>
+            <th>Base Price</th>
+            <th>Type</th>
+            <th>Images</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="8" class="text-center text-muted py-4">
+                    No movies yet. Click "Add New Movie" to get started.
+                </td>
+            </tr>
+        }
+        @foreach (var movie in Model)
+        {
+            var primary = movie.Images.FirstOrDefault(i => i.IsPrimary)
+                          ?? movie.Images.OrderBy(i => i.SortOrder).FirstOrDefault();
+            <tr>
+                <td>
+                    @if (primary != null)
+                    {
+                        <img src="@primary.FilePath" alt="@movie.Name"
+                             style="width: 60px; height: 80px; object-fit: cover; border-radius: 4px;" />
+                    }
+                    else
+                    {
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
+                             style="width: 60px; height: 80px; border-radius: 4px; font-size: 10px;">
+                            No Image
+                        </div>
+                    }
+                </td>
+                <td class="fw-bold">@movie.Name</td>
+                <td>@movie.Director</td>
+                <td>@movie.Duration min</td>
+                <td>@movie.ReleaseAt.ToString("MMM dd, yyyy")</td>
+                <td><span class="badge bg-secondary">@movie.Rating</span></td>
+                <td>RM @movie.BasePrice.ToString()</td>
+                <td>@movie.Type?.Name</td>
+                <td>@movie.Images.Count</td>
+            </tr>
+        }
+    </tbody>
+</table>

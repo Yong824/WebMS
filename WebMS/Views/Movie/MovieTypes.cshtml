@@ -1,0 +1,57 @@
+﻿@model List<WebMS.Models.Entities.Movies.MovieType>
+@{
+    ViewBag.Title = "Movie Types";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2>Movie Types</h2>
+        <a asp-action="Index" class="text-decoration-none">← Back to Movies</a>
+    </div>
+    <!-- Modal Trigger -->
+    <button type="button" class="btn btn-primary"
+            data-modal-url="/Movie/CreateMovieType"
+            data-modal-target="#movieTypeModal">
+        + Add New Type
+    </button>
+</div>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted py-4">No movie types found.</td>
+            </tr>
+        }
+        @foreach (var type in Model)
+        {
+            <tr>
+                <td class="fw-bold">@type.Name</td>
+                <td>@(string.IsNullOrEmpty(type.description) ? "-" : type.description)</td>
+                <td>@type.CreatedAt.ToString("MMM dd, yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal Shell -->
+<div class="modal fade" id="movieTypeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Form loaded via AJAX -->
+        </div>
+    </div>
+</div>
+
+@section foot {
+    <!-- Ensure your generic modal handler is loaded -->
+    <script src="~/js/admin-modals.js" asp-append-version="true"></script>
+}

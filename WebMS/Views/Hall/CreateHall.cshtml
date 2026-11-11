@@ -1,0 +1,59 @@
+﻿@model WebMS.Models.ViewModels.Admin.CreateHallViewModel
+
+<form asp-action="Create" asp-controller="Hall" method="post" data-ajax-form>
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Hall Name</label>
+        <input asp-for="Name" class="form-control" placeholder="e.g. Hall 1, IMAX" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CinemaId" class="form-label">Cinema</label>
+        <select asp-for="CinemaId" asp-items="ViewBag.Cinemas" class="form-select">
+            <option value="">-- Select Cinema --</option>
+        </select>
+        <span asp-validation-for="CinemaId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TemplateId" class="form-label">Seat Layout Template</label>
+        <select asp-for="TemplateId" asp-items="ViewBag.Templates" class="form-select" id="templateSelect">
+            <option value="">-- Decide Later (No Layout) --</option>
+        </select>
+        <small class="text-muted">You can configure the layout later.</small>
+    </div>
+
+    <!-- The visual preview container -->
+    <div id="previewContainer" class="mb-3 d-none">
+        <label class="form-label">Preview:</label>
+        <div class="border p-3 bg-light text-center" id="previewContent"></div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Hall</button>
+</form>
+
+@section foot {
+    <script src="~/js/cinema-editor.js" asp-append-version="true"></script>
+    <script>
+        document.getElementById('templateSelect').addEventListener('change', function () {
+            const templateId = this.value;
+            const preview = document.getElementById('previewContainer');
+            const content = document.getElementById('previewContent');
+
+            if (!templateId) {
+                preview.classList.add('d-none');
+                return;
+            }
+
+            // Fetch the preview via AJAX
+            fetch(`/Hall/GetPreview?templateId=${templateId}`)
+                .then(res => res.text())
+                .then(html => {
+                    content.innerHTML = html;
+                    preview.classList.remove('d-none');
+                });
+        });
+    </script>
+}

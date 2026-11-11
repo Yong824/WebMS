@@ -1,0 +1,88 @@
+﻿@model List<WebMS.Models.Entities.Places.Hall>
+@{
+    ViewBag.Title = "Manage Halls";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Manage Halls</h2>
+    <!-- 👇 Uses the generic modal handler to load the form -->
+    <button type="button" class="btn btn-primary"
+            data-modal-url="/Hall/Create"
+            data-modal-target="#hallModal">
+        + Add New Hall
+    </button>
+</div>
+
+<table class="table table-striped table-hover align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Hall Name</th>
+            <th>Cinema Branch</th>
+            <th>Seat Layout</th>
+            <th>Created At</th>
+            <th class="text-end">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center text-muted py-4">
+                    No halls found. Create one to get started!
+                </td>
+            </tr>
+        }
+        @foreach (var hall in Model)
+        {
+            <tr>
+                <td class="fw-bold">@hall.Name</td>
+                <td>@hall.Cinema?.Name</td>
+                <td>
+                    @if (hall.SeatLayout != null)
+                    {
+                        <span class="badge bg-success">@hall.SeatLayout.Name</span>
+                        <span class="text-muted small ms-1">(@hall.SeatLayout.TotalRow × @hall.SeatLayout.TotalColumn)</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Not Decided</span>
+                    }
+                </td>
+                <td>@hall.CreatedAt.ToString("MMM dd, yyyy")</td>
+                <td class="text-end">
+                    @if (hall.SeatLayoutId.HasValue)
+                    {
+                        <!-- Edit Layout -->
+                        <a href="/SeatLayout/Edit/@hall.SeatLayoutId?returnUrl=/Hall" class="btn btn-sm btn-outline-primary">
+                            Edit Layout
+                        </a>
+                    }
+                    else
+                    {
+                        <!-- Create Layout for this specific Hall -->
+                        <a href="/SeatLayout/CreateForHall/@hall.Id" class="btn btn-sm btn-outline-warning">
+                            Create Layout
+                        </a>
+                    }
+
+                    <!-- You can add Edit/Delete Hall buttons here later -->
+                    <button class="btn btn-sm btn-outline-danger" disabled title="Coming soon">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal Shell for Create Hall -->
+<div class="modal fade" id="hallModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <!-- modal-lg because we want room for the preview -->
+        <div class="modal-content">
+            <!-- Form loaded via AJAX -->
+        </div>
+    </div>
+</div>
+
+@section foot {
+    <script src="~/js/admin-modals.js" asp-append-version="true"></script>
+}

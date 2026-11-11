@@ -1,0 +1,43 @@
+﻿@model List<WebMS.Models.Entities.Seating.SeatLayout>
+@{
+    ViewBag.Title = "Seat Layout Templates";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Seat Layout Templates</h2>
+    <a href="/SeatLayout/Create" class="btn btn-primary">
+        + Create New Template
+    </a>
+</div>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Layout Name</th>
+            <th>Grid Size</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted py-4">
+                    No templates found. Create one to start designing blueprints!
+                </td>
+            </tr>
+        }
+        @foreach (var layout in Model)
+        {
+            <tr>
+                <td class="align-middle">@layout.Name</td>
+                <td class="align-middle">@layout.TotalRow Rows × @layout.TotalColumn Cols</td>
+                <td>
+                    <a href="/SeatLayout/Edit/@layout.Id" class="btn btn-sm btn-outline-primary">
+                        Edit Template
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

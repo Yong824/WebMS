@@ -1,0 +1,111 @@
+﻿@model WebMS.Models.ViewModels.Admin.WeeklyScheduleViewModel
+@{
+    var days = Enumerable.Range(0, 7).Select(i => Model.StartOfWeek.AddDays(i)).ToList();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Schedule Timetable</h2>
+
+    <div class="btn-group">
+        <!-- Week Navigation -->
+        <a asp-action="Index" asp-route-weekOffset="@(Model.WeekOffset - 1)" asp-route-cinemaId="@Model.CinemaId" class="btn btn-outline-primary">
+            &laquo; Previous Week
+        </a>
+        <button class="btn btn-outline-secondary disabled">
+            @Model.StartOfWeek.ToString("MMM dd") - @Model.StartOfWeek.AddDays(6).ToString("MMM dd, yyyy")
+        </button>
+        <a asp-action="Index" asp-route-weekOffset="@(Model.WeekOffset + 1)" asp-route-cinemaId="@Model.CinemaId" class="btn btn-outline-primary">
+            Next Week &raquo;
+        </a>
+    </div>
+</div>
+
+<!-- Cinema Filter -->
+<form method="get" class="mb-3 d-flex gap-2">
+    <input type="hidden" name="weekOffset" value="@Model.WeekOffset" />
+    <select name="cinemaId" class="form-select w-auto" onchange="this.form.submit()">
+        <option value="">All Cinemas</option>
+        @foreach (var cinema in Model.Cinemas)
+        {
+            <option value="@cinema.Id" selected="@(Model.CinemaId == cinema.Id)">@cinema.Name</option>
+        }
+    </select>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-sm text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th style="width: 150px;">Hall / Date</th>
+                @foreach (var day in days)
+                {
+                    <th class="@(day.Date == DateTime.Today ? "bg-primary" : "")">
+                        @day.ToString("ddd")<br />
+                        <small>@day.ToString("dd MMM")</small>
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var hall in Model.Halls)
+            {
+                <tr>
+                    <td class="fw-bold bg-light text-start">
+                        @hall.Name <br />
+                        <small class="text-muted">@hall.Cinema.Name</small>
+                    </td>
+                    @foreach (var day in days)
+                    {
+                        var daySchedules = Model.Schedules
+                            .Where(s => s.HallId == hall.Id && s.Showtime.Date == day.Date)
+                            .OrderBy(s => s.Showtime)
+                            .ToList();
+
+                        <td class="p-1" style="vertical-align: top;">
+                            @if (!daySchedules.Any())
+                            {
+                                <a href="#" class="btn btn-sm btn-light w-100 text-muted"
+                                   style="border: 1px dashed #ccc;"
+                                   data-modal-url="/Schedule/Create?hallId=@hall.Id&date=@day.ToString("yyyy-MM-dd")"
+                                   data-modal-target="#scheduleModal">
+                                    + Add
+                                </a>
+                            }
+                            @foreach (var schedule in daySchedules)
+                            {
+                                var endTime = schedule.Showtime.AddMinutes(schedule.Movie.Duration);
+                                var cleaningEnd = endTime.AddMinutes(30);
+
+                                <div class="card mb-1 border-0 shadow-sm" style="background-color: #e3f2fd;">
+                                    <div class="card-body p-1 text-start">
+                                        <div class="fw-bold text-primary" style="font-size: 0.85rem;">
+                                            @schedule.Showtime.ToString("HH:mm") - @endTime.ToString("HH:mm")
+                                        </div>
+                                        <div style="font-size: 0.75rem; line-height: 1.1;">
+                                            @schedule.Movie.Name
+                                        </div>
+                                        <div class="text-danger" style="font-size: 0.65rem;">
+                                            Cleaning till @cleaningEnd.ToString("HH:mm")
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="scheduleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Form loads here -->
+        </div>
+    </div>
+</div>
+
+@section foot {
+    <script src="~/js/admin-modals.js" asp-append-version="true"></script>
+}

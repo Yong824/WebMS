@@ -1,0 +1,28 @@
+﻿@model WebMS.Models.Entities.Seating.SeatLayout
+@{
+    var seats = Model.Seats.OrderBy(s => s.RowNum).ThenBy(s => s.ColNum).ToList();
+}
+
+<div style="display: grid; grid-template-columns: repeat(@Model.TotalColumn, 10px); gap: 2px; justify-content: center; margin: 0 auto;">
+    @for (int r = 0; r < Model.TotalRow; r++)
+    {
+        for (int c = 0; c < Model.TotalColumn; c++)
+        {
+            var seat = seats.FirstOrDefault(s => s.RowNum == r && s.ColNum == c);
+            var color = "#eee"; // Default empty
+            if (seat != null)
+            {
+                color = seat.Type switch
+                {
+                    WebMS.Models.Enums.SeatType.Seat => "#6c757d",
+                    WebMS.Models.Enums.SeatType.Screen => "#2c3e50",
+                    WebMS.Models.Enums.SeatType.Entrance => "#2ecc71",
+                    WebMS.Models.Enums.SeatType.Exit => "#e67e22",
+                    _ => "#ccc"
+                };
+            }
+            <div style="width: 10px; height: 10px; background-color: @color; border-radius: 2px;" title="Row @r Col @c"></div>
+        }
+    }
+</div>
+<div class="mt-2 text-muted small">@Model.TotalRow Rows × @Model.TotalColumn Cols</div>
