@@ -9,16 +9,13 @@ public class SeatLayout
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
+    [MaxLength(255)]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
     public int TotalRow { get; set; }
 
-    [Required]
     public int TotalColumn { get; set; }
 
-    [Required]
     public bool IsTemplate{ get; set; } // if true means it is reusable template; false means the real seat layout of a hall
     
     public ICollection<SeatSection> Sections { get; set; } = new List<SeatSection>();

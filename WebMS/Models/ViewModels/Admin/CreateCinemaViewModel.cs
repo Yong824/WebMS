@@ -1,20 +1,21 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebMS.Models.ViewModels.Admin;
 
 public class CreateCinemaViewModel
 {
-    [Required, MaxLength(255)]
-    [Display(Name = "Cinema Name")]
+    [StringLength(255)]
+    [DisplayName("Cinema Name")]
     public string Name { get; set; } = string.Empty;
 
-    [Required, MaxLength(20)]
-    [Display(Name = "Phone Number")]
+    [StringLength(20)]
+    [DisplayName("Phone Number")]
     public string PhoneNumber { get; set; } = string.Empty;
 
-    [Required, MaxLength(255), EmailAddress]
+    [StringLength(255), EmailAddress]
     public string Email { get; set; } = string.Empty;
 
-    [Required, MaxLength(255)]
+    [StringLength(255)]
     public string Address { get; set; } = string.Empty;
 }

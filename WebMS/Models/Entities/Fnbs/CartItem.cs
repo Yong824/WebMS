@@ -10,15 +10,12 @@ public class CartItem
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required]
     public int Quantity { get; set; }
 
-    [Required]
     public Guid CartId { get; set; }
     [ForeignKey(nameof(CartId))]
     public FnbCart FnbCart { get; set; } = null!;
 
-    [Required]
     public Guid ProductId { get; set; }
     [ForeignKey(nameof(ProductId))]
     public FnbProduct FnbProduct { get; set; } = null!;

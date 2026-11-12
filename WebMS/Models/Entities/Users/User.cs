@@ -12,27 +12,24 @@ public class User
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(100)]
+    [MaxLength(100)]
     public string Name { get; set; } = string.Empty;
 
-    [Required, MaxLength(20)]
+    [MaxLength(20)]
     public string PhoneNumber { get; set; } = string.Empty;
 
-    [Required, MaxLength(255), EmailAddress]
+    [MaxLength(255)]
     public string Email { get; set; } = string.Empty;
 
     /// Hashed password
-    [Required, MaxLength(500)]
+    [MaxLength(500)]
     [JsonIgnore]
     public string PasswordHash { get; set; } = string.Empty;
 
-    [Required]
     public DateOnly Birthday { get; set; }
 
-    [Required]
     public UserRole Role { get; set; } = UserRole.Customer;
 
-    [Required]
     public UserStatus Status { get; set; } = UserStatus.Normal;
 
     // When the freeze/block started. 

@@ -12,7 +12,6 @@ public class FavoriteMovie
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required]
     public Guid UserId { get; set; }
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
@@ -23,10 +22,9 @@ public class FavoriteMovie
     [ForeignKey(nameof(MovieId))]
     public Movie? Movie { get; set; }
 
-    [Required, MaxLength(200)]
+    [MaxLength(200)]
     public string MovieTitleSnapshot { get; set; } = string.Empty;
 
-    [Required]
     public DateTime AddedAt { get; set; } = DateTime.UtcNow;
 
 }

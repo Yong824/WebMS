@@ -12,20 +12,17 @@ public class FnbOrderItem
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, Column(TypeName = "decimal(10,2)")]
+    [Column(TypeName = "decimal(10,2)")]
     public decimal UnitPrice { get; set; }
 
-    [Required]
     public int Quantity { get; set; }
 
     public string? Note { get; set; }
 
-    [Required]
     public Guid FnbProductId { get; set; }
     [ForeignKey(nameof(FnbProductId))]
     public FnbProduct FnbProduct { get; set; } = null!;
 
-    [Required]
     public Guid TransactionId { get; set; }
     [ForeignKey(nameof(TransactionId))]
     public Transaction Transaction { get; set; } = null!;

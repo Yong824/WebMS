@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 using WebMS.Models.Enums;
 
@@ -6,40 +7,38 @@ namespace WebMS.Models.ViewModels.Admin;
 
 public class CreateMovieViewModel
 {
-    [Required, MaxLength(255)]
-    [Display(Name = "Title")]
+    [StringLength(255)]
+    [DisplayName("Title")]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
     public string Description { get; set; } = string.Empty;
 
-    [Required, MaxLength(255)]
+    [StringLength(255)]
     public string Director { get; set; } = string.Empty;
 
-    [Required]
     [DataType(DataType.Date)]
-    [Display(Name = "Release Date")]
+    [DisplayName("Release Date")]
     public DateTime ReleaseAt { get; set; } = DateTime.UtcNow.Date;
 
-    [Required, Range(1, 500)]
-    [Display(Name = "Duration (minutes)")]
+    [Range(1, 500)]
+    [DisplayName("Duration (minutes)")]
     public int Duration { get; set; } = 120;
 
     [MaxLength(500)]
-    [Display(Name = "Trailer URL (optional)")]
+    [DisplayName("Trailer URL (optional)")]
     public string? TrailerPath { get; set; }
 
-    [Required, Range(0, 500)]
+    [Range(0, 500)]
     [DataType(DataType.Currency)]
-    [Display(Name = "Base Price (RM)")]
+    [DisplayName("Base Price (RM)")]
     public decimal BasePrice { get; set; } = 15.00m;
 
-    [Required]
-    [Display(Name = "Movie Type")]
+    [DisplayName("Movie Type")]
     public Guid MovieTypeId { get; set; }
 
     public MovieRating Rating { get; set; } = MovieRating.G;
 
-    [Display(Name = "Movie Images")]
+    // TODO
+    [DisplayName("Movie Images")]
     public List<IFormFile> Images { get; set; } = new();
 }

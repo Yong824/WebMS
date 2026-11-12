@@ -15,19 +15,16 @@ public class SeatSchedule
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required]
     public SeatScheduleStatus Status { get; set; } = SeatScheduleStatus.Available;
 
     public DateTime? HoldExpireAt { get; set; }
 
     public DateTime? AttendedAt { get; set; }
 
-    [Required]
     public Guid ScheduleId { get; set; }
     [ForeignKey(nameof(ScheduleId))]
     public Schedule Schedule { get; set; } = null!;
 
-    [Required]
     public Guid SeatId { get; set; }
     [ForeignKey(nameof(SeatId))]
     public Seat Seat { get; set; } = null!;

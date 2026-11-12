@@ -16,7 +16,6 @@ public class FnbCart
     public User? User { get; set; }
     public string? SessionKey { get; set; } // For guest carts
 
-    [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime? UpdatedAt { get; set; }

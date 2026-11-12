@@ -11,12 +11,11 @@ public class MovieType
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
+    [MaxLength(255)]
     public string Name { get; set; } = string.Empty;
 
     public string? description { get; set; }
 
-    [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public Guid? CreatedByUserId { get; set; }

@@ -15,24 +15,21 @@ public class MovieTicket
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
+    [MaxLength(255)]
     public string Title { get; set; } = string.Empty;
 
-    [Required]
     public string Description { get; set; } = string.Empty;
 
-    [Required]
     public Guid TransactionId { get; set; }
     [ForeignKey(nameof(TransactionId))]
     public Transaction Transaction { get; set; } = null!;
 
     /// All seats on this ticket belong to this showtime
-    [Required]
     public Guid ScheduleId { get; set; }
     [ForeignKey(nameof(ScheduleId))]
     public Schedule Schedule { get; set; } = null!;
 
-    [Required, MaxLength(30)]
+    [MaxLength(30)]
     public string TicketNumber { get; set; } = string.Empty;   // the QR payload
 
     [MaxLength(500)]

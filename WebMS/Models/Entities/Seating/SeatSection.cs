@@ -21,7 +21,7 @@ public class SeatSection
     [Column(TypeName = "decimal(10,2)")]
     public decimal PriceModifier { get; set; }
 
-    [Required, MaxLength(20)]
+    [MaxLength(20)]
     public string Color { get; set; } = "#000000";
 
     public int DisplayOrder { get; set; }

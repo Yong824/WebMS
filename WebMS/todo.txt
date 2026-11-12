@@ -40,6 +40,11 @@ public class MovieController (DB db, IWebHostEnvironment env) : Controller
 ···································································································································································
 In Controller need to remove the "[HttpGet]" tag if AI give it, but "[HttpPost]" need to be kept
 
+···································································································································································
+If AI give code for ViewModel, aware for "[Display(Name = "Movie Images")]"
+	instead, please use "[DisplayName("Movie Images")]"
+
+···································································································································································
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 * Confirmed (Q&A):
@@ -56,12 +61,28 @@ In Controller need to remove the "[HttpGet]" tag if AI give it, but "[HttpPost]"
 	4. Can I create sub-subfolder in the Views
 		- No, one subfolder one Controller, try to avoid sub-subfolder. Which means just one level in the Views.
 		- And thus, in each subfolder will have an Index.cshtml file. 
+		- NOT DO:
+			Views/Admin/Cinema/Cinema.cshtml
+			Views/Admin/Hall/Hall.cshtml
+			Views/Admin/Movie/Movie.cshtml
+		- DO:
+			View/Admin/Index.cshtml
+			View/Cinema/Index.cshtml
+			View/Hall/Index.cshtml
+			View/Movie/Index.cshtml
 
 	5. Can I create subfolder in Controller
 		- No, just put all at the same level in the folder of Controllers
 
 	6. Can I use Areas for the project
 		- No suggested, this project not so big, keep it as simple as possible
+
+	7. No need [Required] attribute in the Models files
+
+	8. Use "StringLength" instead of "MaxLength" for the ViewModels files
+		8.1 But in the Entities files keep them as "MaxLength"
+
+	
 
 * To ask:
 	1. Structure in for css and js, can it have subfolder?
