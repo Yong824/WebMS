@@ -229,7 +229,7 @@
             cells: cells
         };
 
-        const res = await fetch('/SeatLayout/Save', {
+        const res = await fetch('/AdminSeatLayout/Save', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -240,7 +240,7 @@
 
         if (res.ok) {
             alert("Template saved successfully!");
-            window.location.href = '/SeatLayout';
+            window.location.href = '/AdminSeatLayout';
         } else {
             const err = await res.json();
             alert("Save failed: " + (err.message || "Unknown error"));

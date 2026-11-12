@@ -48,7 +48,7 @@
             }
 
             // Fetch the preview via AJAX
-            fetch(`/Hall/GetPreview?templateId=${templateId}`)
+            fetch(`/AdminHall/GetPreview?templateId=${templateId}`)
                 .then(res => res.text())
                 .then(html => {
                     content.innerHTML = html;

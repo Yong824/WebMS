@@ -5,18 +5,18 @@ using WebMS.Models.ViewModels.Admin;
 
 namespace WebMS.Controllers;
 
-public class CinemaController(DB db) : Controller
+public class AdminCinemaController(DB db) : Controller
 {
 
     public IActionResult Index()
     {
         var cinemas = db.Cinemas.ToList();
-        return View(cinemas);  // Looks for Views/Cinema/Index.cshtml
+        return View(cinemas);  // Looks for Views/AdminCinema/Index.cshtml
     }
 
     public IActionResult Create()
     {
-        // Looks for Views/Cinema/_CreateCinema.cshtml  
+        // Looks for Views/AdminCinema/_CreateCinema.cshtml  
         return PartialView("_CreateCinema", new CreateCinemaViewModel());
     }
 

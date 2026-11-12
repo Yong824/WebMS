@@ -7,7 +7,7 @@
     <h2>Manage Halls</h2>
     <!-- 👇 Uses the generic modal handler to load the form -->
     <button type="button" class="btn btn-primary"
-            data-modal-url="/Hall/Create"
+            data-modal-url="/AdminHall/Create"
             data-modal-target="#hallModal">
         + Add New Hall
     </button>
@@ -53,14 +53,14 @@
                     @if (hall.SeatLayoutId.HasValue)
                     {
                         <!-- Edit Layout -->
-                        <a href="/SeatLayout/Edit/@hall.SeatLayoutId?returnUrl=/Hall" class="btn btn-sm btn-outline-primary">
+                        <a href="/AdminSeatLayout/Edit/@hall.SeatLayoutId?returnUrl=/AdminHall" class="btn btn-sm btn-outline-primary">
                             Edit Layout
                         </a>
                     }
                     else
                     {
                         <!-- Create Layout for this specific Hall -->
-                        <a href="/SeatLayout/CreateForHall/@hall.Id" class="btn btn-sm btn-outline-warning">
+                        <a href="/AdminSeatLayout/CreateForHall/@hall.Id" class="btn btn-sm btn-outline-warning">
                             Create Layout
                         </a>
                     }

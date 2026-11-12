@@ -7,7 +7,7 @@ using WebMS.Services;
 
 namespace WebMS.Controllers;
 
-public class ScheduleController (DB db, ScheduleService scheduleService) : Controller
+public class AdminScheduleController (DB db, ScheduleService scheduleService) : Controller
 {
 
     public async Task<IActionResult> Index(int weekOffset = 0, Guid? cinemaId = null)
@@ -70,7 +70,7 @@ public class ScheduleController (DB db, ScheduleService scheduleService) : Contr
         return PartialView("_CreateSchedule", dto);
     }
 
-    // POST: /Schedule/Create
+    // POST: /AdminSchedule/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateScheduleDto dto)

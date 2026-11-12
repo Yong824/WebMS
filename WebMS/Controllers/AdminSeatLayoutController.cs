@@ -6,7 +6,7 @@ using WebMS.Services;
 
 namespace WebMS.Controllers;
 
-public class SeatLayoutController (DB db, SeatLayoutService seatLayoutService) : Controller
+public class AdminSeatLayoutController (DB db, SeatLayoutService seatLayoutService) : Controller
 {
     private Guid GetCurrentUserId() => Guid.Empty; // TODO: Auth
 

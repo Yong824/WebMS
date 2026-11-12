@@ -7,7 +7,7 @@ using WebMS.Models.ViewModels.Admin;
 
 namespace WebMS.Controllers;
 
-public class MovieController (DB db, IWebHostEnvironment env) : Controller
+public class AdminMovieController (DB db, IWebHostEnvironment env) : Controller
 {
 
     // Allowed image extensions
@@ -16,7 +16,6 @@ public class MovieController (DB db, IWebHostEnvironment env) : Controller
         ".jpg", ".jpeg", ".png", ".gif", ".webp"
     };
 
-    // GET: /Movie
     public async Task<IActionResult> Index()
     {
         var movies = await db.Movies
@@ -27,15 +26,12 @@ public class MovieController (DB db, IWebHostEnvironment env) : Controller
         return View(movies);
     }
 
-    // GET: /Movie/Create
-    [HttpGet]
     public IActionResult Create()
     {
         PopulateDropdowns();
         return View(new CreateMovieViewModel());
     }
 
-    // POST: /Movie/Create
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(CreateMovieViewModel model)
@@ -120,17 +116,15 @@ public class MovieController (DB db, IWebHostEnvironment env) : Controller
     public async Task<IActionResult> MovieTypes()
     {
         var types = await db.MovieTypes.OrderBy(t => t.Name).ToListAsync();
-        return View("MovieTypes", types); // Looks for Views/Movie/MovieTypes.cshtml
+        return View("MovieTypes", types); // Looks for Views/AdminMovie/MovieTypes.cshtml
     }
 
-    // GET: /Movie/CreateMovieType (The Modal Form)
-    [HttpGet]
     public IActionResult CreateMovieType()
     {
         return PartialView("_CreateMovieType", new MovieType());
     }
 
-    // POST: /Movie/CreateMovieType
+    // POST: /AdminMovie/CreateMovieType
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateMovieType(MovieType model)

@@ -8,7 +8,7 @@ using WebMS.Services;
 
 namespace WebMS.Controllers;
 
-public class HallController(DB db, HallService hallService) : Controller
+public class AdminHallController(DB db, HallService hallService) : Controller
 {
 
     public async Task<IActionResult> Index()
@@ -37,8 +37,8 @@ public class HallController(DB db, HallService hallService) : Controller
         {
             var hall = await hallService.CreateHallAsync(model.Name, model.CinemaId, model.TemplateId);
             string? redirectUrl = hall.SeatLayoutId.HasValue
-                ? $"/SeatLayout/Edit/{hall.SeatLayoutId}?returnUrl=/Hall"
-                : "/Hall";
+                ? $"/AdminSeatLayout/Edit/{hall.SeatLayoutId}?returnUrl=/AdminHall"
+                : "/AdminHall";
 
             return Json(new { success = true, redirectUrl });
         }

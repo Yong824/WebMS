@@ -1,23 +1,103 @@
 ﻿@* Layout file for admin files, to be confirm, may need to change location of this layout file*@
+@{
+    var theme = Context.Request.Cookies["theme"];
+    if (theme != "dark" && theme != "light") theme = "light";
+}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="@theme">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     <link rel="shortcut icon" href="/images/favicon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="/css/bootstrap.min.css" asp-append-version="true">
+
+    @* Font: Roboto *@
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="/css/admin-app.css" asp-append-version="true">
     @RenderSection("head", false)
 </head>
 <body>
+    <div class="admin-shell">
 
-    @* TODO: Header & Navigation Bar *@
+        <!-- ── Utility bar ─────────────────────────────── -->
+        <header class="utility-bar">
+            <div class="utility-left">
+                <button type="button" id="sidebarToggle" class="icon-btn" aria-label="Toggle sidebar">☰</button>
+                <a href="/Admin" class="brand">
+                    <img src="/images/bello_logo.png" alt="" class="brand-icon">
+                    <span class="brand-name">Bello</span>
+                </a>
+            </div>
 
-    <main>
-        @RenderBody()
-    </main>
+            <div class="utility-right">
+                <button type="button" id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+                    <span class="icon-light">☀️</span>
+                    <span class="icon-dark">🌙</span>
+                </button>
+
+                <div class="dropdown">
+                    <button class="user-menu" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="avatar">A</span>           @* TODO *@
+                        <span class="user-name">Admin</span>    @* TODO *@
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Profile</a></li>  @*TODO*@
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Logout</a></li>   @*TODO*@
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- ── Sidebar + content ───────────────────────── -->
+        <div class="admin-body">
+
+            <aside class="sidebar" id="sidebar">
+                <nav class="sidebar-nav">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin">📊 Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/AdminCinema">🏢 Cinema</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/AdminHall">🎬 Hall</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link has-sub" data-bs-toggle="collapse" href="#movieSub"
+                                role="button" aria-expanded="false" aria-controls="movieSub">
+                                🎞️ Movie <span class="caret">▾</span>
+                            </a>
+                            <ul class="nav flex-column collapse submenu" id="movieSub">
+                                <li><a class="nav-link" href="/AdminMovie/MovieTypes">Movie Type</a></li>
+                                <li><a class="nav-link" href="/AdminMovie">Movie List</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/AdminSchedule">🗓️ Schedule</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/AdminSeatLayout">Seat Template</a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <main class="content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
 
     @* TODO: Footer *@
 
@@ -26,7 +106,7 @@
     <script src="/js/jquery.validate.min.js"></script>
     <script src="/js/jquery.validate.unobtrusive.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/app.js" asp-append-version="true"></script>
+    <script src="/js/admin-app.js" asp-append-version="true"></script>
     
     @RenderSection("foot", false)
 </body>

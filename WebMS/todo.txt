@@ -85,7 +85,8 @@ If AI give code for ViewModel, aware for "[Display(Name = "Movie Images")]"
 	
 
 * To ask:
-	1. Structure in for css and js, can it have subfolder?
+	1. js file naming convertion
+
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 * Before submission:

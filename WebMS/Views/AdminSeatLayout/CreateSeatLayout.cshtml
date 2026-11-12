@@ -44,7 +44,7 @@
 </div>
 
 <div class="d-flex justify-content-end p-3 border-top">
-    <a href="/SeatLayout" class="btn btn-secondary me-2">Cancel</a>
+    <a href="/AdminSeatLayout" class="btn btn-secondary me-2">Cancel</a>
     <button type="button" class="btn btn-primary" id="btnSave">Save Template</button>
 </div>
 
@@ -56,8 +56,8 @@
         {
             initialState: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model,
             new System.Text.Json.JsonSerializerOptions { PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase })),
-            saveUrl: '/SeatLayout/Save',
-                cancelUrl: '@(ViewBag.ReturnUrl ?? "/SeatLayout")'
+            saveUrl: '/AdminSeatLayout/Save',
+            cancelUrl: '@(ViewBag.ReturnUrl ?? "/AdminSeatLayout")'
         };
     </script>
 
