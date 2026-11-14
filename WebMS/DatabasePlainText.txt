@@ -1,7 +1,42 @@
 // Entities, all inside the same Model/Entities folder
+// Commerce/Banner.cs
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+#nullable disable warnings
+
+namespace WebMS.Models.Entities.Commerce;
+
+public class Banner
+{
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    [MaxLength(255)]
+    public string Title { get; set; }
+
+    [MaxLength(255)]
+    public string FilePath { get; set; }
+
+    [MaxLength(255)]
+    public string? LinkUrl { get; set; }
+    
+    public bool IsActive { get; set; }
+
+    public int SortOrder { get; set; }
+
+    public DateOnly? StartDate { get; set; }   // null = show immediately
+
+    public DateOnly? EndDate { get; set; }   // null = never expires
+
+}
+
 // Commerce/Merchant.cs
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using WebMS.Models.Entities.Places;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Commerce;
 
@@ -11,13 +46,17 @@ public class Merchant
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Name { get; set; }
 
-    [Required, MaxLength(255)]
-    public string SecretKey { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string SecretKey { get; set; }
 
     // Other field pending, need to check with stripe API docs
+
+
+    // -- Navigation -------------------------------------------------
+    public List<Cinema> Cinemas { get; set; } = [];
 
 }
 
@@ -29,6 +68,8 @@ using WebMS.Models.Entities.Users;
 using WebMS.Models.Entities.Schedules;
 using WebMS.Models.Enums;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Commerce;
 
 [Index(nameof(TransactionId))]
@@ -39,25 +80,14 @@ public class MovieTicket
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
-    public string Title { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Title { get; set; }
 
-    [Required]
-    public string Description { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Description { get; set; }
 
-    [Required]
-    public Guid TransactionId { get; set; }
-    [ForeignKey(nameof(TransactionId))]
-    public Transaction Transaction { get; set; } = null!;
-
-    /// All seats on this ticket belong to this showtime
-    [Required]
-    public Guid ScheduleId { get; set; }
-    [ForeignKey(nameof(ScheduleId))]
-    public Schedule Schedule { get; set; } = null!;
-
-    [Required, MaxLength(30)]
-    public string TicketNumber { get; set; } = string.Empty;   // the QR payload
+    [MaxLength(30)]
+    public string TicketNumber { get; set; }        // the QR payload
 
     [MaxLength(500)]
     public string? QrCodeData { get; set; }
@@ -66,23 +96,32 @@ public class MovieTicket
 
     public DateTime IssuedAt { get; set; } = DateTime.UtcNow;
 
-    public DateTime? UsedAt { get; set; }                       // when QR was scanned
+    public DateTime? UsedAt { get; set; }                   // when QR was scanned
 
-    public Guid? StaffId { get; set; }                     // staff who scanned
-    [ForeignKey(nameof(StaffId))]
+    public Guid TransactionId { get; set; }
+    public Transaction Transaction { get; set; }
+
+    public Guid ScheduleId { get; set; }
+    public Schedule Schedule { get; set; }
+
+    public Guid? StaffId { get; set; }                      // staff who scanned
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public User? Staff { get; set; }
 
-    /// All seats covered by this one ticket (one QR)
-    public ICollection<SeatSchedule> SeatSchedules { get; set; } = new List<SeatSchedule>();
+    // One ticket can belongs to multiple seat purchased (seat schedule object)
+    public List<SeatSchedule> SeatSchedules { get; set; } = [];
 }
 
 // Commerce/Transaction.cs
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebMS.Models.Entities.Fnbs;
 using WebMS.Models.Entities.Places;
 using WebMS.Models.Entities.Users;
 using WebMS.Models.Enums;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Commerce;
 
@@ -94,34 +133,37 @@ public class Transaction
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(20)]
-    public string OrderNumber { get; set; } = string.Empty;
+    [MaxLength(20)]
+    public string OrderNumber { get; set; }
 
-    [Required, Column(TypeName = "decimal(10,2)")]
+    [Precision(6,2)]    // -9999.99 ~ 9999.99
     public decimal Subtotal { get; set; }
 
-    [Required, Column(TypeName = "decimal(10,2)")]
+    [Precision(6, 2)]
     public decimal TaxAmount { get; set; }
 
-    [Required, Column(TypeName = "decimal(10,2)")]
+    [Precision(6, 2)]
     public decimal TotalAmount { get; set; }
 
-    [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime? PaidAt { get; set; }
 
-    [Required]
     public TransactionStatus Status { get; set; } = TransactionStatus.Pending;
 
-    [Required]
-    public Guid UserId { get; set; }
-    [ForeignKey(nameof(UserId))]
-    public User User { get; set; } = null!;
+    [MaxLength(255)]
+    public string CinemaNameSnapshot { get; set; }  // in case cinema is been removed, keep the cinema name, and set the Cinema FK to null
 
-    [Required]
-    public Guid CinemaId { get; set; }
+    public Guid? UserId { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]        // if user account been deleted, the transaction record should be remain as well
+    public User? User { get; set; }
 
+    public Guid? CinemaId { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
+    public Cinema? Cinema { get; set; }
+
+    public List<MovieTicket> MovieTickets { get; set; } = [];
+    public List<FnbOrderItem> FnbOrderItems { get; set; } = [];
 }
 
 // Fnbs/CartItem.cs
@@ -129,26 +171,23 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Fnbs;
 
-[Index(nameof(CartId), nameof(ProductId), IsUnique = true)]
+[Index(nameof(FnbCartId), nameof(FnbProductId), IsUnique = true)]
 public class CartItem
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required]
     public int Quantity { get; set; }
 
-    [Required]
-    public Guid CartId { get; set; }
-    [ForeignKey(nameof(CartId))]
-    public FnbCart FnbCart { get; set; } = null!;
+    public Guid FnbCartId { get; set; }
+    public FnbCart FnbCart { get; set; }
 
-    [Required]
-    public Guid ProductId { get; set; }
-    [ForeignKey(nameof(ProductId))]
-    public FnbProduct FnbProduct { get; set; } = null!;
+    public Guid FnbProductId { get; set; }
+    public FnbProduct FnbProduct { get; set; }
 
 }
 
@@ -158,25 +197,27 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebMS.Models.Entities.Users;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Fnbs;
 
-[Index(nameof(UserId), IsUnique = true)]
+[Index(nameof(UserId))]
 public class FnbCart
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
     public Guid? UserId { get; set; }
-    [ForeignKey(nameof(UserId))]
     public User? User { get; set; }
+
+    [MaxLength(255)]
     public string? SessionKey { get; set; } // For guest carts
 
-    [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public DateTime? UpdatedAt { get; set; }
 
-    public ICollection<CartItem> Items { get; set; } = new List<CartItem>();
+    public List<CartItem> CartItems { get; set; } = [];
 
 }
 
@@ -185,6 +226,8 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebMS.Models.Entities.Commerce;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Fnbs;
 
@@ -195,23 +238,19 @@ public class FnbOrderItem
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, Column(TypeName = "decimal(10,2)")]
+    [Precision(6,2)]
     public decimal UnitPrice { get; set; }
 
-    [Required]
     public int Quantity { get; set; }
 
+    [MaxLength(255)]
     public string? Note { get; set; }
 
-    [Required]
     public Guid FnbProductId { get; set; }
-    [ForeignKey(nameof(FnbProductId))]
-    public FnbProduct FnbProduct { get; set; } = null!;
+    public FnbProduct FnbProduct { get; set; }
 
-    [Required]
     public Guid TransactionId { get; set; }
-    [ForeignKey(nameof(TransactionId))]
-    public Transaction Transaction { get; set; } = null!;
+    public Transaction Transaction { get; set; }
 
 }
 
@@ -219,6 +258,8 @@ public class FnbOrderItem
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Fnbs;
 
@@ -228,14 +269,16 @@ public class FnbProduct
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Name { get; set; }
 
-    [Required, Column(TypeName = "decimal(10,2)")]
+    [Precision(4,2)]
     public decimal Price { get; set; }
 
-    [Required]
     public int Stock { get; set; }
+
+    public List<CartItem> CartItems { get; set; } = [];
+    public List<FnbOrderItem> FnbOrderItems { get; set; } = [];
 
 }
 
@@ -245,9 +288,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebMS.Models.Entities.Schedules;
 using WebMS.Models.Entities.Users;
-using WebMS.Models.Enum;
 using WebMS.Models.Enums;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Movies;
 
@@ -256,40 +301,48 @@ public class Movie
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Name { get; set; }
 
-    [Required]
-    public string Description { get; set; } = string.Empty;
+    [MaxLength(1000)]
+    public string Description { get; set; }
 
-    [Required, MaxLength(255)]
-    public string Director { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Director { get; set; }
 
-    [Required]
     public DateTime ReleaseAt { get; set; } = DateTime.UtcNow;
 
-    [Required]
     public int Duration { get; set; } = 120;
 
-    public string? TrailerPath { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string? TrailerPath { get; set; }
 
-    [Required]
+    [Precision(6,2)]
+    public decimal BasePrice { get; set; } = 15.00m;    // default as 15.00
+
+    public MovieStatus Status { get; set; } = MovieStatus.ComingSoon;
+
+    public DateTime? RunEndAt { get; set; }     // The time to set the movie to status archieved
+
+    // TODO: Status (IsPublished, IsDown); DownAt (DateTime)
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public Guid? CreatedByUserId { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    [ForeignKey(nameof(CreatedByUserId))]
-    public User? CreatedBy { get; set; }
+    public Guid? UpdatedByUserId { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
+    public User? UpdatedByUser { get; set; }
 
-    [Required]
-    public Guid MovieTypeId { get; set; }
-
-    [ForeignKey(nameof(MovieTypeId))]
-    public MovieType Type { get; set; } = null!;
+    public Guid TypeId { get; set; }
+    [DeleteBehavior(DeleteBehavior.Restrict)]       // Not allow admin to remove Type if there is movies assigned with that movie type
+    public MovieType Type { get; set; }
 
     public MovieRating Rating { get; set; } = MovieRating.G;
 
-    public ICollection<MovieImage> Images { get; set; } = new List<MovieImage>();
+    public List<MovieImage> Images { get; set; } = [];
+    public List<Schedule> Schedules { get; set; } = [];
+    public List<FavoriteMovie> FavoriteMovies { get; set; } = [];
 
 }
 
@@ -298,6 +351,8 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Movies;
 
 public class MovieImage
@@ -305,22 +360,18 @@ public class MovieImage
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Name { get; set; } 
 
-    [Required]
-    public string FilePath { get; set; } = string.Empty;
-
-    [Required]
+    [MaxLength(255)]
+    public string FilePath { get; set; } 
+    
     public int SortOrder{ get; set; }
 
-    [Required]
     public bool IsPrimary { get; set; } = false;
 
-    [Required]
     public Guid MovieId { get; set; }
-    [ForeignKey(nameof(MovieId))]
-    public Movie Movie { get; set; } = null!;
+    public Movie Movie { get; set; }
 
 }
 
@@ -330,6 +381,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebMS.Models.Entities.Users;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Movies;
 
 [Index(nameof(Name), IsUnique = true)]
@@ -338,21 +391,15 @@ public class MovieType
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Name { get; set; } 
 
-    public string? description { get; set; }
+    [MaxLength(1000)]
+    public string? Description { get; set; }
 
-    [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public Guid? CreatedByUserId { get; set; }
-    [ForeignKey(nameof(CreatedByUserId))]
-    public User? CreatedBy { get; set; }
-
-    public Guid? UpdatedByUserId { get; set; }
-    [ForeignKey(nameof(UpdatedByUserId))]
-    public User? UpdatedBy { get; set; }
+    public List<Movie> Movies { get; set; } = [];
 
 }
 
@@ -364,6 +411,8 @@ using WebMS.Models.Entities.Seating;
 using WebMS.Models.Entities.Users;
 using WebMS.Models.Entities.Commerce;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Places;
 
 public class Cinema
@@ -371,21 +420,20 @@ public class Cinema
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Name { get; set; } 
 
-    [Required, MaxLength(20)]
-    public string PhoneNumber { get; set; } = string.Empty;
+    [MaxLength(20)]
+    public string PhoneNumber { get; set; } 
 
-    [Required, MaxLength(255), EmailAddress]
-    public string Email { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Email { get; set; } 
 
-    [Required, MaxLength(255)]
-    public string Address { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Address { get; set; }
 
-    public Guid? MerchantId { get; set; }
-
-    [ForeignKey(nameof(MerchantId))]
+    public Guid? MerchantId { get; set; }       // null = use default merchant as stated in appsettings.json
+    [DeleteBehavior(DeleteBehavior.Restrict)]
     public Merchant? Merchant { get; set; }
 
     // ─── Audit ───
@@ -393,27 +441,53 @@ public class Cinema
 
     // Nullable, in case creator admin is been deleted, cinema still exists
     public Guid? CreatedByUserId { get; set; }
-
-    [ForeignKey(nameof(CreatedByUserId))]
-    public User? CreatedBy { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public Guid? UpdatedByUserId { get; set; }
-
-    [ForeignKey(nameof(UpdatedByUserId))]
-    public User? UpdatedBy { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
+    public User? CreatedByUser { get; set; }
 
     // ─── Navigation ───
-    // public ICollection<Hall> Halls { get; set; } = new List<Hall>();
+    public List<Hall> Halls { get; set; } = [];
+    public List<Transaction> Transactions { get; set; } = [];
+    public List<CinemaImage> Images { get; set; } = [];
+}
+
+// Places/CinemaImage.cs
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+#nullable disable warnings
+
+namespace WebMS.Models.Entities.Places;
+
+public class CinemaImage
+{
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
+    [MaxLength(255)]
+    public string Name { get; set; } 
+
+    [MaxLength(255)]
+    public string FilePath { get; set; } 
+
+    public int SortOrder { get; set; }
+
+    public bool IsPrimary { get; set; } = false;
+
+    public Guid CinemaId { get; set; }
+    public Cinema Cinema { get; set; } 
+
 }
 
 // Places/Hall.cs
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebMS.Models.Entities.Schedules;
 using WebMS.Models.Entities.Seating;
 using WebMS.Models.Entities.Users;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Places;
 
@@ -424,34 +498,24 @@ public class Hall
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Name { get; set; } 
 
-    [Required]
     public Guid CinemaId { get; set; }
-
-    [ForeignKey(nameof(CinemaId))]
-    public Cinema Cinema { get; set; } = null!;
+    public Cinema Cinema { get; set; } 
 
     public Guid? SeatLayoutId { get; set; }
-    [ForeignKey(nameof(SeatLayoutId))]
     public SeatLayout? SeatLayout { get; set; }
 
     // ─── Audit ───
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? UpdatedAt { get; set; }
 
     // Nullable, in case creator admin is been deleted, hall still exists
     public Guid? CreatedByUserId { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
+    public User? CreatedByUser { get; set; }
 
-    [ForeignKey(nameof(CreatedByUserId))]
-    public User? CreatedBy { get; set; }
-
-    public Guid? UpdatedByUserId { get; set; }
-
-    [ForeignKey(nameof(UpdatedByUserId))]
-    public User? UpdatedBy { get; set; }
-
+    public List<Schedule> Schedules { get; set; } = [];
 
     /**
      * TODO: When creating hall, manually check for seat layout
@@ -464,9 +528,13 @@ public class Hall
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebMS.Models.Entities.Commerce;
 using WebMS.Models.Entities.Movies;
 using WebMS.Models.Entities.Places;
+using WebMS.Models.Entities.Users;
 using WebMS.Models.Enums;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Schedules;
 
@@ -477,24 +545,29 @@ public class Schedule
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required]
+    [Precision(4, 2)]
+    public decimal TimeMultiplier { get; set; } = 1.00m;
+
     public DateTime Showtime { get; set; }
 
-    [Required]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public ShowtimeTier ShowtimeTier { get; set; } = ShowtimeTier.Regular;
 
-    [Required]
     public MovieFormat Format { get; set; } = MovieFormat.Format2D;
 
-    [Required]
-    public Guid MovieId { get; set; }
-    [ForeignKey(nameof(MovieId))]
-    public Movie Movie { get; set; } = null!;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    [Required]
+    public Guid? CreatedByUserId { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
+    public User? CreatedByUser { get; set; }
+
+    public Guid MovieId { get; set; }
+    public Movie Movie { get; set; }
+
     public Guid HallId { get; set; }
-    [ForeignKey(nameof(HallId))]
-    public Hall Hall { get; set; } = null!;
+    public Hall Hall { get; set; }
+
+    public List<MovieTicket> MovieTickets { get; set; } = [];
+    public List<SeatSchedule> SeatSchedules { get; set; } = [];
 
 }
 
@@ -506,6 +579,8 @@ using WebMS.Models.Entities.Seating;
 using WebMS.Models.Entities.Commerce;
 using WebMS.Models.Enums;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Schedules;
 
 [Index(nameof(MovieTicketId))]
@@ -516,25 +591,19 @@ public class SeatSchedule
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required]
     public SeatScheduleStatus Status { get; set; } = SeatScheduleStatus.Available;
 
     public DateTime? HoldExpireAt { get; set; }
 
     public DateTime? AttendedAt { get; set; }
 
-    [Required]
     public Guid ScheduleId { get; set; }
-    [ForeignKey(nameof(ScheduleId))]
-    public Schedule Schedule { get; set; } = null!;
+    public Schedule Schedule { get; set; } 
 
-    [Required]
     public Guid SeatId { get; set; }
-    [ForeignKey(nameof(SeatId))]
-    public Seat Seat { get; set; } = null!;
+    public Seat Seat { get; set; }
 
     public Guid? MovieTicketId { get; set; }
-    [ForeignKey(nameof(MovieTicketId))]
     public MovieTicket? MovieTicket { get; set; }
 
 }
@@ -544,7 +613,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WebMS.Models.Entities.Schedules;
 using WebMS.Models.Enums;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Seating;
 
@@ -554,38 +626,37 @@ public class Seat
     [Key] 
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public Guid LayoutId { get; set; }
+    [MaxLength(20)]
+    public string Label { get; set; } = string.Empty;
 
-    [ForeignKey(nameof(LayoutId))] 
-    public SeatLayout Layout { get; set; } = null!;
-
-    public Guid? SectionId { get; set; }
-
-    [ForeignKey(nameof(SectionId))] 
-    public SeatSection? Section { get; set; }
-
-    [Required]
     public int RowNum { get; set; }
 
-    [Required]
     public int ColNum { get; set; }
-
-    [Required, MaxLength(20)] 
-    public string Label { get; set; } = string.Empty;
 
     public SeatType Type { get; set; } = SeatType.Seat;
 
     public SeatCategory? Category { get; set; }
 
-    [Required]
     public bool IsBroken { get; set; } = false;
 
+    public Guid LayoutId { get; set; }
+    public SeatLayout Layout { get; set; }
+
+    public Guid? SectionId { get; set; }
+    public SeatSection? Section { get; set; }
+
+    public List<SeatSchedule> SeatSchedules { get; set; } = [];
 }
 
 // Seating/SeatLayout.cs
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.NetworkInformation;
 using WebMS.Models.Entities.Places;
+using WebMS.Models.Enums;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Seating;
 
@@ -594,21 +665,29 @@ public class SeatLayout
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Name { get; set; } 
 
-    [Required]
     public int TotalRow { get; set; }
 
-    [Required]
     public int TotalColumn { get; set; }
 
-    [Required]
-    public bool IsTemplate{ get; set; } // if true means it is reusable template; false means the real seat layout of a hall
-    
-    public ICollection<SeatSection> Sections { get; set; } = new List<SeatSection>();
-    public ICollection<Seat> Seats { get; set; } = new List<Seat>();
+    public bool IsTemplate { get; set; } // if true means it is reusable template; false means the real seat layout of a hall
 
+    /* Cannot do full navigation, as will cause circular FKs problem
+     * public Guid? HallId { get; set; } // null = it is template
+     * public Hall? Hall { get; set; }
+     */
+
+    public List<SeatSection> Sections { get; set; } = [];
+    public List<Seat> Seats { get; set; } = [];
+
+
+    /**
+     * TODO: When deleting seat layout, manually check the hall 
+     * if (await _db.Halls.AnyAsync(h => h.SeatLayoutId == layout.Id))
+     *     return Conflict("Layout is in use by a hall");
+     */
 }
 
 // Seating/SeatSection.cs
@@ -616,6 +695,8 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebMS.Models.Enums;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Seating;
 
@@ -625,21 +706,20 @@ public class SeatSection
     [Key] 
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public Guid LayoutId { get; set; }
-
-    [ForeignKey(nameof(LayoutId))] 
-    public SeatLayout Layout { get; set; } = null!; // "null!" to indicate this is non-nullable and prevent warning message for it
-
-    public SeatSectionLevel Name { get; set; }
-
-    [Column(TypeName = "decimal(10,2)")]
+    [Precision(6,2)]
     public decimal PriceModifier { get; set; }
 
-    [Required, MaxLength(20)]
+    [MaxLength(20)]
     public string Color { get; set; } = "#000000";
 
     public int DisplayOrder { get; set; }
 
+    public SeatSectionLevel Name { get; set; }
+
+    public Guid LayoutId { get; set; }
+    public SeatLayout Layout { get; set; }
+
+    public List<Seat> Seats { get; set; } = [];
 }
 
 // Users/FavoriteMovie.cs
@@ -647,7 +727,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using WebMS.Models.Entities.Users;
+using WebMS.Models.Entities.Movies;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Users;
 
@@ -657,22 +739,19 @@ public class FavoriteMovie
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required]
-    public Guid UserId { get; set; }
-    [ForeignKey(nameof(UserId))]
-    public User User { get; set; } = null!;
-
-    /* Movie is nullable because in case movie is removed, the user can still know 
+    /* Store the  user can still know 
      * what movie in their favorite is been removed by using the MovieName in this class */
+    [MaxLength(255)]
+    public string MovieTitleSnapshot { get; set; }
+
+    public DateTime AddedAt { get; set; } = DateTime.UtcNow;
+
     public Guid? MovieId { get; set; }
-    [ForeignKey(nameof(MovieId))]
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public Movie? Movie { get; set; }
 
-    [Required, MaxLength(200)]
-    public string MovieTitleSnapshot { get; set; } = string.Empty;
-
-    [Required]
-    public DateTime AddedAt { get; set; } = DateTime.UtcNow;
+    public Guid UserId { get; set; }
+    public User User { get; set; }
 
 }
 
@@ -681,7 +760,14 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebMS.Models.Entities.Commerce;
+using WebMS.Models.Entities.Fnbs;
+using WebMS.Models.Entities.Movies;
+using WebMS.Models.Entities.Places;
+using WebMS.Models.Entities.Schedules;
 using WebMS.Models.Enums;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Users;
 
@@ -691,27 +777,26 @@ public class User
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Required, MaxLength(100)]
-    public string Name { get; set; } = string.Empty;
+    [MaxLength(100)]
+    public string Name { get; set; } 
 
-    [Required, MaxLength(20)]
-    public string PhoneNumber { get; set; } = string.Empty;
+    [MaxLength(20)]
+    public string PhoneNumber { get; set; } 
 
-    [Required, MaxLength(255), EmailAddress]
-    public string Email { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string Email { get; set; }
+
+    public bool EmailConfirmed { get; set; } = false;
 
     /// Hashed password
-    [Required, MaxLength(500)]
+    [MaxLength(255)]
     [JsonIgnore]
-    public string PasswordHash { get; set; } = string.Empty;
+    public string PasswordHash { get; set; } 
 
-    [Required]
     public DateOnly Birthday { get; set; }
 
-    [Required]
     public UserRole Role { get; set; } = UserRole.Customer;
 
-    [Required]
     public UserStatus Status { get; set; } = UserStatus.Normal;
 
     // When the freeze/block started. 
@@ -724,13 +809,18 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public DateTime? LastLoginAt { get; set; }
-    public bool EmailConfirmed { get; set; } = false;
 
     // ─── Navigation ───
-    // public ICollection<MovieTransaction> Transactions { get; set; } = new List<MovieTransaction>();
+    public List<Transaction> Transactions { get; set; } = [];
+    public List<FavoriteMovie> FavoriteMovies { get; set; } = [];
+    public List<Movie> Movies { get; set; } = [];               // admin: the cinemas created by this user
+    public List<Cinema> Cinemas { get; set; } = [];             // admin: the cinemas created by this user
+    public List<Hall> Halls { get; set; } = [];                 // admin: the hall created by this user
+    public List<Schedule> Schedules { get; set; } = [];         // admin: the schedule created by this user
+    public List<MovieTicket> MovieTickets { get; set; } = [];   // admin: the ticket that scanned by this user, not the ticket owned by the user
+
 
     // ─── Computed (NOT columns) ───
-
     // A frozen user whose FrozenUntil has passed is effectively active again.</summary>
     [NotMapped]
     public bool IsActive =>
@@ -763,6 +853,15 @@ public static class MovieFormatExtensions
         MovieFormat.Format4DX => "4DX",
         _ => throw new ArgumentOutOfRangeException(nameof(f))
     };
+
+    public static decimal GetDefaultModifier(this MovieFormat format) => format switch
+    {
+        MovieFormat.Format2D => 0.00m,
+        MovieFormat.Format3D => 3.00m,
+        MovieFormat.Imax => 10.00m,
+        MovieFormat.Format4DX => 15.00m,
+        _ => 0.00m
+    };
 }
 
 // MovieRating.cs
@@ -773,6 +872,16 @@ public enum MovieRating
     G = 0,
     PG = 1,
     PG_13 = 2
+}
+
+// MovieStatus.cs
+namespace WebMS.Models.Enums;
+
+public enum MovieStatus
+{
+    ComingSoon = 0,   // Not bookable yet, but shown in catalog
+    NowShowing = 1,   // Active, bookable if schedules exist
+    Archived = 2      // Removed from catalog, no longer bookable
 }
 
 // MovieTicketStatus.cs
@@ -794,6 +903,25 @@ public enum SeatCategory
     Standard = 0,
     OKU = 1,
     VIP = 2
+}
+
+public static class SeatCategoryExtensions
+{
+    public static decimal GetDefaultModifier(this SeatCategory category) => category switch
+    {
+        SeatCategory.Standard => 0.00m,
+        SeatCategory.OKU => 0.00m,   // legally should not cost more
+        SeatCategory.VIP => 5.00m,
+        _ => 0.00m
+    };
+
+    public static string GetDisplayName(this SeatCategory category) => category switch
+    {
+        SeatCategory.Standard => "Standard",
+        SeatCategory.OKU => "OKU (Wheelchair)",
+        SeatCategory.VIP => "VIP / Recliner",
+        _ => category.ToString()
+    };
 }
 
 // SeatScheduleStatus.cs
@@ -857,6 +985,49 @@ public enum SeatType
     Emergency_Exit = 4,
     Aisle = 5,
     Empty = 6
+}
+
+// ShowtimeTier.cs
+namespace WebMS.Models.Enums;
+
+public enum ShowtimeTier
+{
+    Matinee = 0,    // before ~5 PM
+    Regular = 1,    // weekday evening
+    Prime = 2     // weekend / holiday evening
+}
+
+public static class ShowtimeTierExtensions
+{
+    public static decimal GetDefaultMultiplier(this ShowtimeTier tier) => tier switch
+    {
+        ShowtimeTier.Matinee => 0.80m,
+        ShowtimeTier.Regular => 1.00m,
+        ShowtimeTier.Prime => 1.20m,
+        _ => 1.00m
+    };
+
+    public static string GetDisplayName(this ShowtimeTier tier) => tier switch
+    {
+        ShowtimeTier.Matinee => "Matinee",
+        ShowtimeTier.Regular => "Regular",
+        ShowtimeTier.Prime => "Prime (Weekend)",
+        _ => tier.ToString()
+    };
+
+    /// <summary>Auto-suggests a tier from the showtime. Admin can override.</summary>
+    public static ShowtimeTier FromDateTime(DateTime showtime)
+    {
+        var isWeekend = showtime.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
+
+        if (isWeekend && showtime.Hour >= 17) 
+            return ShowtimeTier.Prime;
+
+        if (showtime.Hour < 17) 
+            return ShowtimeTier.Matinee;
+
+        return ShowtimeTier.Regular;
+    }
 }
 
 // TransactionStatus.cs

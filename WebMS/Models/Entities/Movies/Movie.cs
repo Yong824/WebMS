@@ -35,6 +35,10 @@ public class Movie
     [Precision(6,2)]
     public decimal BasePrice { get; set; } = 15.00m;    // default as 15.00
 
+    public MovieStatus Status { get; set; } = MovieStatus.ComingSoon;
+
+    public DateTime? RunEndAt { get; set; }     // The time to set the movie to status archieved
+
     // TODO: Status (IsPublished, IsDown); DownAt (DateTime)
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

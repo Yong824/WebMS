@@ -22,6 +22,43 @@ namespace WebMS.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("WebMS.Models.Entities.Commerce.Banner", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly?>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LinkUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Banners");
+                });
+
             modelBuilder.Entity("WebMS.Models.Entities.Commerce.Merchant", b =>
                 {
                     b.Property<Guid>("Id")
@@ -304,6 +341,12 @@ namespace WebMS.Migrations
                     b.Property<DateTime>("ReleaseAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("RunEndAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("TrailerPath")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -457,7 +500,7 @@ namespace WebMS.Migrations
 
                     b.HasIndex("CinemaId");
 
-                    b.ToTable("CinemaImage");
+                    b.ToTable("CinemaImages");
                 });
 
             modelBuilder.Entity("WebMS.Models.Entities.Places.Hall", b =>

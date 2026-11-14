@@ -1,5 +1,6 @@
 ﻿@model WebMS.Models.ViewModels.Admin.WeeklyScheduleViewModel
 @{
+    ViewBag.Title = "Schedule";
     var days = Enumerable.Range(0, 7).Select(i => Model.StartOfWeek.AddDays(i)).ToList();
 }
 

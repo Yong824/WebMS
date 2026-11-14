@@ -17,9 +17,10 @@
 
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-** AI usage note:
+** [IMPORTANT] AI usage note:
 ···································································································································································
 NOT USE FLUENT API
+(e.g. protected override void OnModelCreating(ModelBuilder modelBuilder) {...}) 
 
 ···································································································································································
 // When create controller, AI mostly will give
@@ -110,25 +111,10 @@ If AI give code for ViewModel, aware for "[Display(Name = "Movie Images")]"
 * To ask:
 	1. js file naming convertion
 
-
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 * Before submission:
 	1. Search in project is there any comment with "TODO" or "to do", fix all of them
 	2. Add a readme file if needed. (optional)
-	
--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-* Controllers Advice, may use structure like this:
-	Controllers/
-	  HomeController.cs          ← Customer landing page, login, register
-	  MoviesController.cs        ← Customer: browse movies
-	  BookingController.cs       ← Customer: seat selection, checkout
-  
-	  AdminController.cs         ← Admin: dashboard (has Index() action)
-	  CinemaController.cs        ← Admin: CRUD cinemas
-	  HallController.cs          ← Admin: CRUD halls
-	  SeatLayoutController.cs    ← Admin: CRUD seat layouts
-	  ScheduleController.cs      ← Admin: CRUD showtimes
-	  MovieController.cs         ← Admin: CRUD movies (can reuse MoviesController too)
 	  
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 * Database structure: refer to DatabasePlainText.txt, may use it copy to AI for reference, but aware it may be inconsistent with real model files

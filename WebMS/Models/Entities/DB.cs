@@ -22,6 +22,7 @@ public class DB(DbContextOptions<DB> options) : DbContext(options)
 
     // ─── Places & Seating ───
     public DbSet<Cinema> Cinemas { get; set; }
+    public DbSet<CinemaImage> CinemaImages { get; set; }
     public DbSet<Hall> Halls { get; set; }
     public DbSet<SeatLayout> SeatLayouts { get; set; }
     public DbSet<SeatSection> SeatSections { get; set; }
@@ -32,6 +33,7 @@ public class DB(DbContextOptions<DB> options) : DbContext(options)
     public DbSet<SeatSchedule> SeatSchedules { get; set; }
 
     // ─── Commerce ───
+    public DbSet<Banner> Banners { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<MovieTicket> MovieTickets { get; set; }
     public DbSet<Merchant> Merchants { get; set; }
