@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Commerce;
 
 public class Banner
@@ -9,10 +11,12 @@ public class Banner
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [MaxLength(255)]
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; }
 
-    public string FilePath { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string FilePath { get; set; }
 
+    [MaxLength(255)]
     public string? LinkUrl { get; set; }
     
     public bool IsActive { get; set; }

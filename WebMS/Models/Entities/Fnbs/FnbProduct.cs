@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Fnbs;
 
 [Index(nameof(Name), IsUnique = true)]
@@ -11,11 +13,14 @@ public class FnbProduct
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; }
 
-    [Column(TypeName = "decimal(10,2)")]
+    [Precision(4,2)]
     public decimal Price { get; set; }
 
     public int Stock { get; set; }
+
+    public List<CartItem> CartItems { get; set; } = [];
+    public List<FnbOrderItem> FnbOrderItems { get; set; } = [];
 
 }

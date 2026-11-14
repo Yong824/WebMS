@@ -13,17 +13,21 @@
     --border: #dddddd;
     --primary: #0066cc;
     --hover: #ececec;
+    --box-shadow: none;
     color-scheme: light;
+    --app-nav-font-size: 1rem;
+    --app-subnav-font-size: .92rem;
 }
                         /* Dark Theme */
 [data-theme="dark"] {
-    --bg: #121212;
-    --surface: #1e1e1e;
+    --bg: #595f80;
+    --surface: #49526e;
     --text: #e8e8e8;
     --text-muted: #a0a0a0;
     --border: #333333;
-    --primary: #4da3ff;
-    --hover: #2a2a2a;
+    --primary: #808bab;
+    --hover: #717e8f;
+    --box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.85);
     color-scheme: dark;
 }
 
@@ -70,6 +74,7 @@ body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Roboto', sans-serif;
+    font-size: var(--app-body-font-size);
 }
 
 .admin-shell {
@@ -105,6 +110,7 @@ body {
     color: var(--text);
     text-decoration: none;
     font-weight: 700;
+    font-size: 22px;
 }
 
 .brand-icon {
@@ -128,6 +134,7 @@ body {
 .theme-toggle:hover,
 .user-menu:hover {
     background: var(--hover);
+    box-shadow: var(--box-shadow);
     border-color: var(--border);
 }
 
@@ -187,9 +194,11 @@ body {
     border-radius: 6px;
     padding: 10px 12px;
     text-decoration: none;
+    font-size: 18px;
 }
 
 .sidebar-nav .nav-link:hover {
+    box-shadow: var(--box-shadow);
     background: var(--hover);
 }
 
@@ -212,10 +221,10 @@ body {
     padding-left: 28px;
 }
 
-.submenu .nav-link {
-    font-size: .92rem;
-    color: var(--text-muted);
-}
+    .submenu .nav-link {
+        font-size: 16px;
+        color: var(--text-muted);
+    }
 
 .submenu .nav-link:hover,
 .submenu .nav-link.active {

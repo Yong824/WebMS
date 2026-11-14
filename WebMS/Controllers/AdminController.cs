@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebMS.Models.Entities;
-using WebMS.Models.Entities.Places;
 using WebMS.Models.ViewModels.Admin;
 using WebMS.Services;
 

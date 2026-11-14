@@ -1,6 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.NetworkInformation;
 using WebMS.Models.Entities.Places;
+using WebMS.Models.Enums;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Seating;
 
@@ -10,16 +15,21 @@ public class SeatLayout
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } 
 
     public int TotalRow { get; set; }
 
     public int TotalColumn { get; set; }
 
-    public bool IsTemplate{ get; set; } // if true means it is reusable template; false means the real seat layout of a hall
-    
-    public ICollection<SeatSection> Sections { get; set; } = new List<SeatSection>();
-    public ICollection<Seat> Seats { get; set; } = new List<Seat>();
+    public bool IsTemplate { get; set; } // if true means it is reusable template; false means the real seat layout of a hall
+
+    /* Cannot do full navigation, as will cause circular FKs problem
+     * public Guid? HallId { get; set; } // null = it is template
+     * public Hall? Hall { get; set; }
+     */
+
+    public List<SeatSection> Sections { get; set; } = [];
+    public List<Seat> Seats { get; set; } = [];
 
 
     /**

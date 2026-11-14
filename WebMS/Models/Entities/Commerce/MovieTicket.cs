@@ -5,6 +5,8 @@ using WebMS.Models.Entities.Users;
 using WebMS.Models.Entities.Schedules;
 using WebMS.Models.Enums;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Commerce;
 
 [Index(nameof(TransactionId))]
@@ -16,21 +18,13 @@ public class MovieTicket
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [MaxLength(255)]
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; set; }
 
-    public string Description { get; set; } = string.Empty;
-
-    public Guid TransactionId { get; set; }
-    [ForeignKey(nameof(TransactionId))]
-    public Transaction Transaction { get; set; } = null!;
-
-    /// All seats on this ticket belong to this showtime
-    public Guid ScheduleId { get; set; }
-    [ForeignKey(nameof(ScheduleId))]
-    public Schedule Schedule { get; set; } = null!;
+    [MaxLength(255)]
+    public string Description { get; set; }
 
     [MaxLength(30)]
-    public string TicketNumber { get; set; } = string.Empty;   // the QR payload
+    public string TicketNumber { get; set; }        // the QR payload
 
     [MaxLength(500)]
     public string? QrCodeData { get; set; }
@@ -39,12 +33,18 @@ public class MovieTicket
 
     public DateTime IssuedAt { get; set; } = DateTime.UtcNow;
 
-    public DateTime? UsedAt { get; set; }                       // when QR was scanned
+    public DateTime? UsedAt { get; set; }                   // when QR was scanned
 
-    public Guid? StaffId { get; set; }                     // staff who scanned
-    [ForeignKey(nameof(StaffId))]
+    public Guid TransactionId { get; set; }
+    public Transaction Transaction { get; set; }
+
+    public Guid ScheduleId { get; set; }
+    public Schedule Schedule { get; set; }
+
+    public Guid? StaffId { get; set; }                      // staff who scanned
+    [DeleteBehavior(DeleteBehavior.SetNull)]
     public User? Staff { get; set; }
 
-    /// All seats covered by this one ticket (one QR)
-    public ICollection<SeatSchedule> SeatSchedules { get; set; } = new List<SeatSchedule>();
+    // One ticket can belongs to multiple seat purchased (seat schedule object)
+    public List<SeatSchedule> SeatSchedules { get; set; } = [];
 }

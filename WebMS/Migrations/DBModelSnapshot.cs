@@ -54,7 +54,8 @@ namespace WebMS.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("IssuedAt")
                         .HasColumnType("datetime2");
@@ -108,8 +109,13 @@ namespace WebMS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CinemaId")
+                    b.Property<Guid?>("CinemaId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CinemaNameSnapshot")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -126,15 +132,18 @@ namespace WebMS.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
 
                     b.Property<decimal>("TaxAmount")
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -155,10 +164,10 @@ namespace WebMS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CartId")
+                    b.Property<Guid>("FnbCartId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("FnbProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Quantity")
@@ -166,9 +175,9 @@ namespace WebMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("FnbProductId");
 
-                    b.HasIndex("CartId", "ProductId")
+                    b.HasIndex("FnbCartId", "FnbProductId")
                         .IsUnique();
 
                     b.ToTable("CartItems");
@@ -184,7 +193,8 @@ namespace WebMS.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SessionKey")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -209,7 +219,8 @@ namespace WebMS.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -218,7 +229,8 @@ namespace WebMS.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
 
                     b.HasKey("Id");
 
@@ -241,7 +253,8 @@ namespace WebMS.Migrations
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(4, 2)
+                        .HasColumnType("decimal(4,2)");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
@@ -261,17 +274,16 @@ namespace WebMS.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("BasePrice")
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Director")
                         .IsRequired()
@@ -280,9 +292,6 @@ namespace WebMS.Migrations
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("MovieTypeId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -296,13 +305,23 @@ namespace WebMS.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TrailerPath")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("TypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("TypeId");
 
-                    b.HasIndex("MovieTypeId");
+                    b.HasIndex("UpdatedByUserId");
 
                     b.ToTable("Movies");
                 });
@@ -315,7 +334,8 @@ namespace WebMS.Migrations
 
                     b.Property<string>("FilePath")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<bool>("IsPrimary")
                         .HasColumnType("bit");
@@ -347,28 +367,19 @@ namespace WebMS.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedByUserId");
 
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("UpdatedByUserId");
 
                     b.ToTable("MovieTypes");
                 });
@@ -408,21 +419,45 @@ namespace WebMS.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedByUserId");
 
                     b.HasIndex("MerchantId");
 
-                    b.HasIndex("UpdatedByUserId");
-
                     b.ToTable("Cinemas");
+                });
+
+            modelBuilder.Entity("WebMS.Models.Entities.Places.CinemaImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CinemaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CinemaId");
+
+                    b.ToTable("CinemaImage");
                 });
 
             modelBuilder.Entity("WebMS.Models.Entities.Places.Hall", b =>
@@ -448,12 +483,6 @@ namespace WebMS.Migrations
                     b.Property<Guid?>("SeatLayoutId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UpdatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedByUserId");
@@ -461,8 +490,6 @@ namespace WebMS.Migrations
                     b.HasIndex("SeatLayoutId")
                         .IsUnique()
                         .HasFilter("[SeatLayoutId] IS NOT NULL");
-
-                    b.HasIndex("UpdatedByUserId");
 
                     b.HasIndex("CinemaId", "Name")
                         .IsUnique();
@@ -478,6 +505,9 @@ namespace WebMS.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Format")
                         .HasColumnType("int");
@@ -495,9 +525,12 @@ namespace WebMS.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("TimeMultiplier")
+                        .HasPrecision(4, 2)
                         .HasColumnType("decimal(4,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
 
                     b.HasIndex("MovieId");
 
@@ -631,7 +664,8 @@ namespace WebMS.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("PriceModifier")
-                        .HasColumnType("decimal(10,2)");
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
 
                     b.HasKey("Id");
 
@@ -655,8 +689,8 @@ namespace WebMS.Migrations
 
                     b.Property<string>("MovieTitleSnapshot")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -708,8 +742,8 @@ namespace WebMS.Migrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -736,17 +770,18 @@ namespace WebMS.Migrations
             modelBuilder.Entity("WebMS.Models.Entities.Commerce.MovieTicket", b =>
                 {
                     b.HasOne("WebMS.Models.Entities.Schedules.Schedule", "Schedule")
-                        .WithMany()
+                        .WithMany("MovieTickets")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WebMS.Models.Entities.Users.User", "Staff")
-                        .WithMany()
-                        .HasForeignKey("StaffId");
+                        .WithMany("MovieTickets")
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("WebMS.Models.Entities.Commerce.Transaction", "Transaction")
-                        .WithMany()
+                        .WithMany("MovieTickets")
                         .HasForeignKey("TransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -760,11 +795,17 @@ namespace WebMS.Migrations
 
             modelBuilder.Entity("WebMS.Models.Entities.Commerce.Transaction", b =>
                 {
+                    b.HasOne("WebMS.Models.Entities.Places.Cinema", "Cinema")
+                        .WithMany("Transactions")
+                        .HasForeignKey("CinemaId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("WebMS.Models.Entities.Users.User", "User")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Cinema");
 
                     b.Navigation("User");
                 });
@@ -772,14 +813,14 @@ namespace WebMS.Migrations
             modelBuilder.Entity("WebMS.Models.Entities.Fnbs.CartItem", b =>
                 {
                     b.HasOne("WebMS.Models.Entities.Fnbs.FnbCart", "FnbCart")
-                        .WithMany("Items")
-                        .HasForeignKey("CartId")
+                        .WithMany("CartItems")
+                        .HasForeignKey("FnbCartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WebMS.Models.Entities.Fnbs.FnbProduct", "FnbProduct")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
+                        .WithMany("CartItems")
+                        .HasForeignKey("FnbProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -800,13 +841,13 @@ namespace WebMS.Migrations
             modelBuilder.Entity("WebMS.Models.Entities.Fnbs.FnbOrderItem", b =>
                 {
                     b.HasOne("WebMS.Models.Entities.Fnbs.FnbProduct", "FnbProduct")
-                        .WithMany()
+                        .WithMany("FnbOrderItems")
                         .HasForeignKey("FnbProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WebMS.Models.Entities.Commerce.Transaction", "Transaction")
-                        .WithMany()
+                        .WithMany("FnbOrderItems")
                         .HasForeignKey("TransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -818,19 +859,20 @@ namespace WebMS.Migrations
 
             modelBuilder.Entity("WebMS.Models.Entities.Movies.Movie", b =>
                 {
-                    b.HasOne("WebMS.Models.Entities.Users.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
                     b.HasOne("WebMS.Models.Entities.Movies.MovieType", "Type")
-                        .WithMany()
-                        .HasForeignKey("MovieTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("Movies")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CreatedBy");
+                    b.HasOne("WebMS.Models.Entities.Users.User", "UpdatedByUser")
+                        .WithMany("Movies")
+                        .HasForeignKey("UpdatedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Type");
+
+                    b.Navigation("UpdatedByUser");
                 });
 
             modelBuilder.Entity("WebMS.Models.Entities.Movies.MovieImage", b =>
@@ -844,84 +886,78 @@ namespace WebMS.Migrations
                     b.Navigation("Movie");
                 });
 
-            modelBuilder.Entity("WebMS.Models.Entities.Movies.MovieType", b =>
-                {
-                    b.HasOne("WebMS.Models.Entities.Users.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("WebMS.Models.Entities.Users.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedByUserId");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("UpdatedBy");
-                });
-
             modelBuilder.Entity("WebMS.Models.Entities.Places.Cinema", b =>
                 {
-                    b.HasOne("WebMS.Models.Entities.Users.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
+                    b.HasOne("WebMS.Models.Entities.Users.User", "CreatedByUser")
+                        .WithMany("Cinemas")
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("WebMS.Models.Entities.Commerce.Merchant", "Merchant")
-                        .WithMany()
-                        .HasForeignKey("MerchantId");
+                        .WithMany("Cinemas")
+                        .HasForeignKey("MerchantId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("WebMS.Models.Entities.Users.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedByUserId");
-
-                    b.Navigation("CreatedBy");
+                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Merchant");
+                });
 
-                    b.Navigation("UpdatedBy");
+            modelBuilder.Entity("WebMS.Models.Entities.Places.CinemaImage", b =>
+                {
+                    b.HasOne("WebMS.Models.Entities.Places.Cinema", "Cinema")
+                        .WithMany("Images")
+                        .HasForeignKey("CinemaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cinema");
                 });
 
             modelBuilder.Entity("WebMS.Models.Entities.Places.Hall", b =>
                 {
                     b.HasOne("WebMS.Models.Entities.Places.Cinema", "Cinema")
-                        .WithMany()
+                        .WithMany("Halls")
                         .HasForeignKey("CinemaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WebMS.Models.Entities.Users.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
+                    b.HasOne("WebMS.Models.Entities.Users.User", "CreatedByUser")
+                        .WithMany("Halls")
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("WebMS.Models.Entities.Seating.SeatLayout", "SeatLayout")
                         .WithMany()
                         .HasForeignKey("SeatLayoutId");
 
-                    b.HasOne("WebMS.Models.Entities.Users.User", "UpdatedBy")
-                        .WithMany()
-                        .HasForeignKey("UpdatedByUserId");
-
                     b.Navigation("Cinema");
 
-                    b.Navigation("CreatedBy");
+                    b.Navigation("CreatedByUser");
 
                     b.Navigation("SeatLayout");
-
-                    b.Navigation("UpdatedBy");
                 });
 
             modelBuilder.Entity("WebMS.Models.Entities.Schedules.Schedule", b =>
                 {
+                    b.HasOne("WebMS.Models.Entities.Users.User", "CreatedByUser")
+                        .WithMany("Schedules")
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("WebMS.Models.Entities.Places.Hall", "Hall")
-                        .WithMany()
+                        .WithMany("Schedules")
                         .HasForeignKey("HallId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WebMS.Models.Entities.Movies.Movie", "Movie")
-                        .WithMany()
+                        .WithMany("Schedules")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Hall");
 
@@ -935,13 +971,13 @@ namespace WebMS.Migrations
                         .HasForeignKey("MovieTicketId");
 
                     b.HasOne("WebMS.Models.Entities.Schedules.Schedule", "Schedule")
-                        .WithMany()
+                        .WithMany("SeatSchedules")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("WebMS.Models.Entities.Seating.Seat", "Seat")
-                        .WithMany()
+                        .WithMany("SeatSchedules")
                         .HasForeignKey("SeatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -962,7 +998,7 @@ namespace WebMS.Migrations
                         .IsRequired();
 
                     b.HasOne("WebMS.Models.Entities.Seating.SeatSection", "Section")
-                        .WithMany()
+                        .WithMany("Seats")
                         .HasForeignKey("SectionId");
 
                     b.Navigation("Layout");
@@ -984,11 +1020,12 @@ namespace WebMS.Migrations
             modelBuilder.Entity("WebMS.Models.Entities.Users.FavoriteMovie", b =>
                 {
                     b.HasOne("WebMS.Models.Entities.Movies.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId");
+                        .WithMany("FavoriteMovies")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("WebMS.Models.Entities.Users.User", "User")
-                        .WithMany()
+                        .WithMany("FavoriteMovies")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -998,19 +1035,73 @@ namespace WebMS.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WebMS.Models.Entities.Commerce.Merchant", b =>
+                {
+                    b.Navigation("Cinemas");
+                });
+
             modelBuilder.Entity("WebMS.Models.Entities.Commerce.MovieTicket", b =>
                 {
                     b.Navigation("SeatSchedules");
                 });
 
+            modelBuilder.Entity("WebMS.Models.Entities.Commerce.Transaction", b =>
+                {
+                    b.Navigation("FnbOrderItems");
+
+                    b.Navigation("MovieTickets");
+                });
+
             modelBuilder.Entity("WebMS.Models.Entities.Fnbs.FnbCart", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("WebMS.Models.Entities.Fnbs.FnbProduct", b =>
+                {
+                    b.Navigation("CartItems");
+
+                    b.Navigation("FnbOrderItems");
                 });
 
             modelBuilder.Entity("WebMS.Models.Entities.Movies.Movie", b =>
                 {
+                    b.Navigation("FavoriteMovies");
+
                     b.Navigation("Images");
+
+                    b.Navigation("Schedules");
+                });
+
+            modelBuilder.Entity("WebMS.Models.Entities.Movies.MovieType", b =>
+                {
+                    b.Navigation("Movies");
+                });
+
+            modelBuilder.Entity("WebMS.Models.Entities.Places.Cinema", b =>
+                {
+                    b.Navigation("Halls");
+
+                    b.Navigation("Images");
+
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("WebMS.Models.Entities.Places.Hall", b =>
+                {
+                    b.Navigation("Schedules");
+                });
+
+            modelBuilder.Entity("WebMS.Models.Entities.Schedules.Schedule", b =>
+                {
+                    b.Navigation("MovieTickets");
+
+                    b.Navigation("SeatSchedules");
+                });
+
+            modelBuilder.Entity("WebMS.Models.Entities.Seating.Seat", b =>
+                {
+                    b.Navigation("SeatSchedules");
                 });
 
             modelBuilder.Entity("WebMS.Models.Entities.Seating.SeatLayout", b =>
@@ -1018,6 +1109,28 @@ namespace WebMS.Migrations
                     b.Navigation("Seats");
 
                     b.Navigation("Sections");
+                });
+
+            modelBuilder.Entity("WebMS.Models.Entities.Seating.SeatSection", b =>
+                {
+                    b.Navigation("Seats");
+                });
+
+            modelBuilder.Entity("WebMS.Models.Entities.Users.User", b =>
+                {
+                    b.Navigation("Cinemas");
+
+                    b.Navigation("FavoriteMovies");
+
+                    b.Navigation("Halls");
+
+                    b.Navigation("MovieTickets");
+
+                    b.Navigation("Movies");
+
+                    b.Navigation("Schedules");
+
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

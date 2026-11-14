@@ -5,6 +5,8 @@ using WebMS.Models.Entities.Seating;
 using WebMS.Models.Entities.Users;
 using WebMS.Models.Entities.Commerce;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Places;
 
 public class Cinema
@@ -13,20 +15,19 @@ public class Cinema
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } 
 
     [MaxLength(20)]
-    public string PhoneNumber { get; set; } = string.Empty;
+    public string PhoneNumber { get; set; } 
 
     [MaxLength(255)]
-    public string Email { get; set; } = string.Empty;
+    public string Email { get; set; } 
 
     [MaxLength(255)]
-    public string Address { get; set; } = string.Empty;
+    public string Address { get; set; }
 
-    public Guid? MerchantId { get; set; }
-
-    [ForeignKey(nameof(MerchantId))]
+    public Guid? MerchantId { get; set; }       // null = use default merchant as stated in appsettings.json
+    [DeleteBehavior(DeleteBehavior.Restrict)]
     public Merchant? Merchant { get; set; }
 
     // ─── Audit ───
@@ -34,17 +35,11 @@ public class Cinema
 
     // Nullable, in case creator admin is been deleted, cinema still exists
     public Guid? CreatedByUserId { get; set; }
-
-    [ForeignKey(nameof(CreatedByUserId))]
-    public User? CreatedBy { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public Guid? UpdatedByUserId { get; set; }
-
-    [ForeignKey(nameof(UpdatedByUserId))]
-    public User? UpdatedBy { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
+    public User? CreatedByUser { get; set; }
 
     // ─── Navigation ───
-    // public ICollection<Hall> Halls { get; set; } = new List<Hall>();
+    public List<Hall> Halls { get; set; } = [];
+    public List<Transaction> Transactions { get; set; } = [];
+    public List<CinemaImage> Images { get; set; } = [];
 }

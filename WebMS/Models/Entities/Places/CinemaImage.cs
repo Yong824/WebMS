@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Places;
 
 public class CinemaImage
@@ -10,16 +12,16 @@ public class CinemaImage
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; } 
 
-    public string FilePath { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string FilePath { get; set; } 
 
     public int SortOrder { get; set; }
 
     public bool IsPrimary { get; set; } = false;
 
     public Guid CinemaId { get; set; }
-    [ForeignKey(nameof(CinemaId))]
-    public Cinema Cinema { get; set; } = null!;
+    public Cinema Cinema { get; set; } 
 
 }

@@ -2,9 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Fnbs;
 
-[Index(nameof(CartId), nameof(ProductId), IsUnique = true)]
+[Index(nameof(FnbCartId), nameof(FnbProductId), IsUnique = true)]
 public class CartItem
 {
     [Key]
@@ -12,12 +14,10 @@ public class CartItem
 
     public int Quantity { get; set; }
 
-    public Guid CartId { get; set; }
-    [ForeignKey(nameof(CartId))]
-    public FnbCart FnbCart { get; set; } = null!;
+    public Guid FnbCartId { get; set; }
+    public FnbCart FnbCart { get; set; }
 
-    public Guid ProductId { get; set; }
-    [ForeignKey(nameof(ProductId))]
-    public FnbProduct FnbProduct { get; set; } = null!;
+    public Guid FnbProductId { get; set; }
+    public FnbProduct FnbProduct { get; set; }
 
 }

@@ -35,8 +35,6 @@ public class HallService (DB db)
                 TotalRow = template.TotalRow,
                 TotalColumn = template.TotalColumn,
                 IsTemplate = false // It's a real hall layout now
-
-                // TODO: created at, created by, updated at, updated by
             };
             db.SeatLayouts.Add(newLayout);
 

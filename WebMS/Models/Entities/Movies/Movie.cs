@@ -3,8 +3,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebMS.Models.Entities.Schedules;
 using WebMS.Models.Entities.Users;
 using WebMS.Models.Enums;
+
+#nullable disable warnings
 
 namespace WebMS.Models.Entities.Movies;
 
@@ -14,36 +17,42 @@ public class Movie
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; }
 
-    public string Description { get; set; } = string.Empty;
+    [MaxLength(1000)]
+    public string Description { get; set; }
 
     [MaxLength(255)]
-    public string Director { get; set; } = string.Empty;
+    public string Director { get; set; }
 
     public DateTime ReleaseAt { get; set; } = DateTime.UtcNow;
 
     public int Duration { get; set; } = 120;
 
-    public string? TrailerPath { get; set; } = string.Empty;
+    [MaxLength(255)]
+    public string? TrailerPath { get; set; }
 
-    [Column(TypeName = "decimal(10,2)")]
-    public decimal BasePrice { get; set; } = 15;    // default as 15.00
+    [Precision(6,2)]
+    public decimal BasePrice { get; set; } = 15.00m;    // default as 15.00
+
+    // TODO: Status (IsPublished, IsDown); DownAt (DateTime)
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public Guid? CreatedByUserId { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    [ForeignKey(nameof(CreatedByUserId))]
-    public User? CreatedBy { get; set; }
+    public Guid? UpdatedByUserId { get; set; }
+    [DeleteBehavior(DeleteBehavior.SetNull)]
+    public User? UpdatedByUser { get; set; }
 
-    public Guid MovieTypeId { get; set; }
-
-    [ForeignKey(nameof(MovieTypeId))]
-    public MovieType Type { get; set; } = null!;
+    public Guid TypeId { get; set; }
+    [DeleteBehavior(DeleteBehavior.Restrict)]       // Not allow admin to remove Type if there is movies assigned with that movie type
+    public MovieType Type { get; set; }
 
     public MovieRating Rating { get; set; } = MovieRating.G;
 
-    public ICollection<MovieImage> Images { get; set; } = new List<MovieImage>();
+    public List<MovieImage> Images { get; set; } = [];
+    public List<Schedule> Schedules { get; set; } = [];
+    public List<FavoriteMovie> FavoriteMovies { get; set; } = [];
 
 }

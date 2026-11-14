@@ -5,6 +5,8 @@ using WebMS.Models.Entities.Seating;
 using WebMS.Models.Entities.Commerce;
 using WebMS.Models.Enums;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Schedules;
 
 [Index(nameof(MovieTicketId))]
@@ -22,15 +24,12 @@ public class SeatSchedule
     public DateTime? AttendedAt { get; set; }
 
     public Guid ScheduleId { get; set; }
-    [ForeignKey(nameof(ScheduleId))]
-    public Schedule Schedule { get; set; } = null!;
+    public Schedule Schedule { get; set; } 
 
     public Guid SeatId { get; set; }
-    [ForeignKey(nameof(SeatId))]
-    public Seat Seat { get; set; } = null!;
+    public Seat Seat { get; set; }
 
     public Guid? MovieTicketId { get; set; }
-    [ForeignKey(nameof(MovieTicketId))]
     public MovieTicket? MovieTicket { get; set; }
 
 }

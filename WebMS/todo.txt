@@ -19,6 +19,9 @@
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ** AI usage note:
 ···································································································································································
+NOT USE FLUENT API
+
+···································································································································································
 // When create controller, AI mostly will give
 public class MovieController : Controller
 {
@@ -75,14 +78,34 @@ If AI give code for ViewModel, aware for "[Display(Name = "Movie Images")]"
 		- No, just put all at the same level in the folder of Controllers
 
 	6. Can I use Areas for the project
-		- No suggested, this project not so big, keep it as simple as possible
+		- No, this project not so big, keep it as simple as possible
 
-	7. No need [Required] attribute in the Models files
+	7. No need [Required] attribute in the Models files.
+	7.1 Nullable variable no need something like " = string.Empty", or "null!;", just use the question mark (e.g. public string? Name { get; set; })
+	7.2 For List initialization, assign it with empty array (e.g. List<Product> Products  { get; set; } = [];)
 
 	8. Use "StringLength" instead of "MaxLength" for the ViewModels files
 		8.1 But in the Entities files keep them as "MaxLength"
 
-	
+	9. Not use "public List<SeatSchedule> SeatSchedules { get; set; } = new List<SeatSchedule>();"
+		Instead, use "public List<SeatSchedule> SeatSchedules { get; set; } = [];"
+
+	10. Database Relationship try do like full (two-way) navigation, example as:
+			Inside class <Product> has Category object
+			Inside class <Category> has List<Product> 
+		If possible, NOT do like:
+			Inside class <Product> has Category object
+			BUT, inside class <Category> no have List<Product>
+
+	11. No need attribute [ForeignKey(...)], just use the default naming conversion, for example
+			public Guid CategoryId { get; set; }
+			public Category Category { get; set; }
+		The program will read the category id and auto assign to the category, as long as follow the format 
+			"<objectVariableName>Id" (e.g. in this case objectVariableName = "Category")
+
+	12. No need use attribute [ColumnType(...)]
+			As long as you assigned the datatype, it will auto decide the column type for database
+
 
 * To ask:
 	1. js file naming convertion

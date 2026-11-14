@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using WebMS.Models.Entities;
 using WebMS.Models.Entities.Movies;
 using WebMS.Models.ViewModels.Admin;
 
@@ -51,7 +50,7 @@ public class AdminMovieController (DB db, IWebHostEnvironment env) : Controller
             ReleaseAt = model.ReleaseAt,
             Duration = model.Duration,
             TrailerPath = model.TrailerPath,
-            MovieTypeId = model.MovieTypeId,
+            TypeId = model.MovieTypeId, // TODO: model.MovieTypeId change to model.TypeId (align with model)
             Rating = model.Rating,
             BasePrice = model.BasePrice,
             CreatedAt = DateTime.UtcNow
@@ -129,10 +128,6 @@ public class AdminMovieController (DB db, IWebHostEnvironment env) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateMovieType(MovieType model)
     {
-        // Remove navigation properties from validation
-        ModelState.Remove(nameof(model.CreatedBy));
-        ModelState.Remove(nameof(model.UpdatedBy));
-
         if (!ModelState.IsValid)
         {
             return PartialView("_CreateMovieType", model); // Return form with errors

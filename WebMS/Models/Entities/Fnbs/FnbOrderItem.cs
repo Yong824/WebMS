@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebMS.Models.Entities.Commerce;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Fnbs;
 
 [Index(nameof(TransactionId))]
@@ -12,19 +14,18 @@ public class FnbOrderItem
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    [Column(TypeName = "decimal(10,2)")]
+    [Precision(6,2)]
     public decimal UnitPrice { get; set; }
 
     public int Quantity { get; set; }
 
+    [MaxLength(255)]
     public string? Note { get; set; }
 
     public Guid FnbProductId { get; set; }
-    [ForeignKey(nameof(FnbProductId))]
-    public FnbProduct FnbProduct { get; set; } = null!;
+    public FnbProduct FnbProduct { get; set; }
 
     public Guid TransactionId { get; set; }
-    [ForeignKey(nameof(TransactionId))]
-    public Transaction Transaction { get; set; } = null!;
+    public Transaction Transaction { get; set; }
 
 }

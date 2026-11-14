@@ -1,6 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using WebMS.Models;
-using WebMS.Models.Entities;
+global using WebMS.Models.Entities;
 using WebMS.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,3 +19,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapDefaultControllerRoute();
 app.Run();
+
+/* Note: Not to use
+    app.UseRouting();
+    app.UseAuthentication();
+    app.UseAuthorization();
+*/

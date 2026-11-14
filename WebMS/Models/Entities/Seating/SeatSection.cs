@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebMS.Models.Enums;
 
+#nullable disable warnings
+
 namespace WebMS.Models.Entities.Seating;
 
 [Index(nameof(LayoutId), nameof(Name), IsUnique = true)]
@@ -11,14 +13,7 @@ public class SeatSection
     [Key] 
     public Guid Id { get; set; } = Guid.NewGuid();
 
-    public Guid LayoutId { get; set; }
-
-    [ForeignKey(nameof(LayoutId))] 
-    public SeatLayout Layout { get; set; } = null!; // "null!" to indicate this is non-nullable and prevent warning message for it
-
-    public SeatSectionLevel Name { get; set; }
-
-    [Column(TypeName = "decimal(10,2)")]
+    [Precision(6,2)]
     public decimal PriceModifier { get; set; }
 
     [MaxLength(20)]
@@ -26,4 +21,10 @@ public class SeatSection
 
     public int DisplayOrder { get; set; }
 
+    public SeatSectionLevel Name { get; set; }
+
+    public Guid LayoutId { get; set; }
+    public SeatLayout Layout { get; set; }
+
+    public List<Seat> Seats { get; set; } = [];
 }
