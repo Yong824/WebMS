@@ -20,7 +20,7 @@ app.UseStaticFiles();
 app.MapDefaultControllerRoute();
 app.Run();
 
-/* Note: Not to use
+/* Note: Not to use (TODO: delete these comment before submit)
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();

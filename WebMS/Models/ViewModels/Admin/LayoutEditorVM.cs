@@ -1,6 +1,6 @@
 ﻿namespace WebMS.Models.ViewModels.Admin;
 
-public class LayoutEditorViewModel
+public class LayoutEditorVM
 {
     public Guid? LayoutId { get; set; }
     public Guid? HallId { get; set; }

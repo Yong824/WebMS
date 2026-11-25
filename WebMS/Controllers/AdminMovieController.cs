@@ -28,12 +28,12 @@ public class AdminMovieController (DB db, IWebHostEnvironment env) : Controller
     public IActionResult Create()
     {
         PopulateDropdowns();
-        return View(new CreateMovieViewModel());
+        return View(new CreateMovieVM());
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(CreateMovieViewModel model)
+    public async Task<IActionResult> Create(CreateMovieVM model)
     {
         if (!ModelState.IsValid)
         {

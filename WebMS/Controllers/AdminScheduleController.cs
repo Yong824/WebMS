@@ -31,7 +31,7 @@ public class AdminScheduleController (DB db, ScheduleService scheduleService) : 
             .ToListAsync();
 
         // 4. Build the ViewModel
-        var vm = new WeeklyScheduleViewModel
+        var vm = new WeeklyScheduleVM
         {
             StartOfWeek = startOfWeek,
             WeekOffset = weekOffset,

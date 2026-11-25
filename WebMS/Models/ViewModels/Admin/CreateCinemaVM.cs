@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebMS.Models.ViewModels.Admin;
 
-public class CreateCinemaViewModel
+public class CreateCinemaVM
 {
     [StringLength(255)]
     [DisplayName("Cinema Name")]

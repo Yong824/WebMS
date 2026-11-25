@@ -17,13 +17,13 @@ public class AdminHallController(DB db, HallService hallService) : Controller
 
     public async Task<IActionResult> Create()
     {
-        var vm = new CreateHallViewModel();
+        var vm = new CreateHallVM();
         await PopulateDropdowns(vm);
         return View("CreateHall", vm);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateHallViewModel model)
+    public async Task<IActionResult> Create(CreateHallVM model)
     {
         if (!ModelState.IsValid)
         {
@@ -60,7 +60,7 @@ public class AdminHallController(DB db, HallService hallService) : Controller
         return PartialView("_LayoutPreview", layout);
     }
 
-    private async Task PopulateDropdowns(CreateHallViewModel vm)
+    private async Task PopulateDropdowns(CreateHallVM vm)
     {
         ViewBag.Cinemas = new SelectList(await db.Cinemas.ToListAsync(), "Id", "Name", vm.CinemaId);
         ViewBag.Templates = new SelectList(

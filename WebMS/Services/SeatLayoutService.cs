@@ -10,9 +10,9 @@ public class SeatLayoutService (DB db)
 {
 
     // ─── Build the DEFAULT editor (for a new template or empty hall layout) ───
-    public LayoutEditorViewModel BuildDefaultEditorVm(bool isTemplate, Guid? hallId)
+    public LayoutEditorVM BuildDefaultEditorVm(bool isTemplate, Guid? hallId)
     {
-        var vm = new LayoutEditorViewModel
+        var vm = new LayoutEditorVM
         {
             IsNew = true,
             IsTemplate = isTemplate,
@@ -62,7 +62,7 @@ public class SeatLayoutService (DB db)
         return vm;
     }
 
-    public async Task<LayoutEditorViewModel?> BuildNewHallEditorVmAsync(Guid hallId)
+    public async Task<LayoutEditorVM?> BuildNewHallEditorVmAsync(Guid hallId)
     {
         var hall = await db.Halls.FindAsync(hallId);
         if (hall == null) return null;
@@ -75,7 +75,7 @@ public class SeatLayoutService (DB db)
     }
 
     // ─── Load existing layout for editing ───
-    public async Task<LayoutEditorViewModel?> BuildEditorVmAsync(Guid layoutId)
+    public async Task<LayoutEditorVM?> BuildEditorVmAsync(Guid layoutId)
     {
         var layout = await db.SeatLayouts
             .Include(l => l.Sections)
@@ -87,7 +87,7 @@ public class SeatLayoutService (DB db)
 
         var hall = await db.Halls.FirstOrDefaultAsync(h => h.SeatLayoutId == layout.Id);
 
-        return new LayoutEditorViewModel
+        return new LayoutEditorVM
         {
             LayoutId = layout.Id,
             IsNew = false,

@@ -4,7 +4,7 @@ using WebMS.Models.Entities.Schedules;
 
 namespace WebMS.Models.ViewModels.Admin;
 
-public class WeeklyScheduleViewModel
+public class WeeklyScheduleVM
 {
     public DateTime StartOfWeek { get; set; }
     public int WeekOffset { get; set; }

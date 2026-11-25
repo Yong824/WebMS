@@ -2,7 +2,7 @@
 
 namespace WebMS.Models.ViewModels.Admin;
 
-public class CreateHallViewModel
+public class CreateHallVM
 {
     [StringLength(255)]
     public string Name { get; set; } = string.Empty;

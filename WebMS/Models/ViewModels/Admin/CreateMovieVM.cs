@@ -5,7 +5,7 @@ using WebMS.Models.Enums;
 
 namespace WebMS.Models.ViewModels.Admin;
 
-public class CreateMovieViewModel
+public class CreateMovieVM
 {
     [StringLength(255)]
     [DisplayName("Title")]

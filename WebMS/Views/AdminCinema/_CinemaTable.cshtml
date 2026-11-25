@@ -1,0 +1,131 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@inject IConfiguration Config
+@model IPagedList<WebMS.Models.ViewModels.Admin.CinemaVM>
+
+@{
+    string[] fields = ["Id", "Name", "PhoneNumber", "Email", "Address", "Merchant", "CreatedAt", "CreateBy", "Halls"];
+    var defaultMerchant = Config["Stripe:MerchantName"] ?? "";   // Default Merchant Name in appsettings.json
+}
+
+@Html.Hidden("sort", "", new { form = "f" })
+@Html.Hidden("dir", "", new { form = "f" })
+
+<table class="table" id="cinemaTable">
+    <tr>
+        @foreach (var f in fields)
+        {
+            string d = "asc";
+            string c = "";
+
+            if (f == ViewBag.Sort)
+            {
+                d = ViewBag.Dir switch
+                {
+                    "asc" => "des",
+                    "des" => "",
+                    _ => "asc"
+                };
+
+                c = ViewBag.Dir;
+            }
+
+            <th>
+                <a data-ajax="true"
+                   data-ajax-update="#target"
+                   data-ajax-loading="#loader"
+                   href="?name=@ViewBag.Name&sort=@f&dir=@d" class="@c">@f</a>
+            </th>
+        }
+
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+
+    @foreach (var c in Model)
+    {
+        <tr>
+            <td class="id-cell">
+                @c.DisplayId
+                <span class="popup">@c.Id</span>
+            </td>
+            <td>@c.Name</td>
+            <td>@c.PhoneNumber</td>
+            <td>@c.Email</td>
+            <td>@c.Address</td>
+            <td>@(c.MerchantName ?? defaultMerchant)</td>
+            <td>@c.CreatedAt</td>
+            <td>
+                @if (!string.IsNullOrEmpty(c.CreatedByUser))
+                {
+                    @c.CreatedByUser
+                }
+                else
+                {
+                    <span class="has-tip grey-out" title="The admin account that created this cinema has been deleted.">
+                        [none] <span aria-hidden="true">ⓘ</span>
+                    </span>
+                }
+            </td>
+            <td class="hall-cell">
+                @c.HallCount
+
+                <div class="popup">
+                    <ul>
+                        @if (c.HallCount <= 0)
+                        {
+                            <li>[None]</li>
+                        }
+                        else
+                        {
+                            @foreach (var h in c.Halls)
+                            {
+                                <li>@h</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </td>
+            <td>
+                @if (c.ImageCount > 0)
+                {
+                    <img src="@c.Images.First().FilePath" alt="@c.Name"
+                         style="width: 80px; height: 60px; object-fit: cover;" />
+                    @if (c.ImageCount > 1)
+                    {
+                        <small>@(c.ImageCount - 1) More</small>
+                    }
+                }
+                else
+                {
+                    <span>No Image</span>
+                }
+            </td>
+
+            <td>
+                <a href="/AdminCinema/Edit/@c.Id">Edit</a>
+            </td>
+        </tr>
+    }
+</table>
+
+@{
+    var options = PagedListRenderOptions.ClassicPlusFirstAndLast;
+    options.LinkToFirstPageFormat = "First";
+    options.LinkToLastPageFormat = "Last";
+    options.LinkToPreviousPageFormat = "Previous";
+    options.LinkToNextPageFormat = "Next";
+
+    var ajaxOptions = new AjaxOptions
+    {
+        HttpMethod = "get",
+        UpdateTargetId = "target",
+        LoadingElementId = "#loader",
+    };
+}
+
+@Html.PagedListPager(
+    Model,
+    p => $"?name={ViewBag.Name}&sort={ViewBag.Sort}&dir={ViewBag.Dir}&page={p}",
+    PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(options, ajaxOptions)
+)
